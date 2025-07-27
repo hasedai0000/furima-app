@@ -1,0 +1,17 @@
+version: "3.8" # docker-composeのバージョンを指定
+services:
+  nginx: # サービス名
+    container_name: "nginx-docker-compose" # コンテナ名
+    image: nginx:1.21.1 # 参照するimage名を指定。ここではDockerHub上のnginxイメージを指定している。
+    ports:
+      - "80:80" # ホストとゲストのポート番号のマッピング。
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf #ディレクトリのバインドマウント。
+      - ./src:/var/www/
+    depends_on:
+      - php # サービス同士の依存関係
+  php:
+    container_name: "php-docker-compose"
+    build: ./docker/php # ビルドする dockerfileの場所。パスを指定する。./docker/php配下のDockerfileを参照して作成
+    volumes:
+      - ./src:/var/www/
