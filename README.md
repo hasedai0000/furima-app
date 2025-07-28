@@ -79,23 +79,36 @@ docker compose exec php bash
 
 # Nginxコンテナに入る
 docker compose exec nginx bash
+
+# mysqlコンテナに入る
+docker compose exec mysql bash
 ```
+
+#### MySQL へのアクセス
+
+```bash
+# mysqlコンテナに入る
+docker compose exec mysql bash
+# mysqlにログイン
+mysql -u ユーザ名 -p
 
 ### 5. ファイル構成
 
 ```
+
 Furima/
 ├── docker/
-│   ├── nginx/
-│   │   └── default.conf    # Nginx設定ファイル
-│   └── php/
-│       ├── Dockerfile      # PHPコンテナの設定
-│       └── php.ini         # PHP設定ファイル
+│ ├── nginx/
+│ │ └── default.conf # Nginx 設定ファイル
+│ └── php/
+│ ├── Dockerfile # PHP コンテナの設定
+│ └── php.ini # PHP 設定ファイル
 ├── src/
-│   └── index.php          # メインのPHPファイル
-├── docker-compose.yml     # Docker Compose設定
-└── README.md             # このファイル
-```
+│ └── index.php # メインの PHP ファイル
+├── docker-compose.yml # Docker Compose 設定
+└── README.md # このファイル
+
+````
 
 ### 6. トラブルシューティング
 
@@ -106,7 +119,7 @@ Furima/
 ```yaml
 ports:
   - "8080:80" # ホストの8080ポートを使用
-```
+````
 
 この場合、アクセス URL は `http://localhost:8080` になります。
 

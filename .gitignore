@@ -1,0 +1,71 @@
+# Docker関連
+docker/mysql/data/
+docker/mysql/data/*
+
+# 環境設定ファイル
+.env
+.env.local
+.env.production
+
+# ログファイル
+*.log
+logs/
+
+# 一時ファイル
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# OS生成ファイル
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE/エディタ設定
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Node.js関連（もし使用する場合）
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# PHP関連
+vendor/
+composer.lock
+*.cache
+
+# データベース関連
+*.sql
+*.sqlite
+*.db
+
+# バックアップファイル
+*.bak
+*.backup
+
+# 圧縮ファイル
+*.zip
+*.tar.gz
+*.rar
+
+# 画像ファイル（必要に応じて）
+# *.png
+# *.jpg
+# *.jpeg
+# *.gif
+# *.svg
+
+# その他
+*.pid
+*.seed
+*.pid.lock 

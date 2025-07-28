@@ -15,3 +15,15 @@ services:
     build: ./docker/php # ビルドする dockerfileの場所。パスを指定する。./docker/php配下のDockerfileを参照して作成
     volumes:
       - ./src:/var/www/
+  mysql:
+    image: mysql:8.0.26
+    platform: linux/amd64
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: first_db
+      MYSQL_USER: first_user
+      MYSQL_PASSWORD: first_pass
+    command: mysqld --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
