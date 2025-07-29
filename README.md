@@ -18,8 +18,10 @@ coachtech フリマ
 ### 1. リポジトリのクローン
 
 ```bash
-git clone <リポジトリURL>
-cd Furima
+# SSHでクローンする場合
+git clone git@github.com:hasedai0000/furima-app.git
+# HTTPSでクローンする場合
+git clone https://github.com/hasedai0000/furima-app.git
 ```
 
 ### 2. 環境の起動
@@ -29,6 +31,23 @@ cd Furima
 ```bash
 # Dockerコンテナをビルドして起動
 docker compose up -d --build
+```
+
+#### Laravel プロジェクトの作成
+
+```bash
+# phpのコンテナに入る
+docker compose exec php bash
+
+# Laravelのインストール
+composer create-project "laravel/laravel=8.*" . --prefer-dist
+```
+
+#### 2 回目以降の起動
+
+```bash
+docker compose up -d
+
 ```
 
 ### 3. 動作確認
