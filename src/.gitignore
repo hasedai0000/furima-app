@@ -76,3 +76,8 @@ Homestead.yaml
 # Application specific
 /storage/app/public/uploads/
 /storage/app/public/images/
+
+# Code quality tools
+.php-cs-fixer.cache
+.phpstan.result.cache
+.phpunit.cache

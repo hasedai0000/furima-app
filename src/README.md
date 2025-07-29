@@ -59,6 +59,56 @@ In order to ensure that the Laravel community is welcoming to all, please review
 
 If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
+## コーディング制約
+
+このプロジェクトでは、コード品質を保つために以下のツールと制約を設定しています：
+
+### 静的解析ツール
+
+- **PHPStan**: 型安全性とコード品質のチェック
+- **PHP_CodeSniffer**: PSR-12コーディング規約のチェック
+- **PHP-CS-Fixer**: 自動コード整形
+
+### 使用方法
+
+```bash
+# 依存関係のインストール
+composer install
+
+# 静的解析の実行
+composer analyse
+
+# コーディング規約チェック
+composer cs-check
+
+# コーディング規約の自動修正
+composer cs-fix
+
+# コード整形
+composer format
+
+# テスト実行
+composer test
+
+# 全体的な品質チェック（解析 + 規約チェック + テスト）
+composer quality
+```
+
+### Git Hooks
+
+コミット前に自動的に以下のチェックが実行されます：
+- PHPStan静的解析
+- PHP_CodeSniffer規約チェック
+- PHPUnitテスト
+
+### コーディング規約
+
+- PSR-12コーディング規約に準拠
+- 最大行長: 120文字
+- 配列構文: 短縮記法 `[]`
+- インポート文のアルファベット順ソート
+- 未使用インポートの削除
+
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
