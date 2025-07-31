@@ -1,17 +1,17 @@
 .header {
     background: #000;
+    height: 82px;
+    align-content: center;
 }
 
 .header__inner {
-    margin: 0 auto;
-    padding: 20px 15px;
-    max-width: 1230px;
+    padding-left: 20px;
 }
 
 .header-utilities {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    height: 34.81px;
 }
 
 .header__logo {
