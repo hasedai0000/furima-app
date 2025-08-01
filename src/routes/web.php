@@ -14,6 +14,6 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [AuthController::class, 'index'])->name('index');
 });

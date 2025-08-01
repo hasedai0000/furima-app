@@ -14,12 +14,15 @@
       <p>登録時に送信されたメールのリンクをクリックして認証を完了してください。</p>
     </div>
     <div class="form__button">
-      <a href="{{ route('verification.notice') }}">メール認証はこちら</a>
-    </div>
-    <div class="form__button">
       <form method="POST" action="{{ route('verification.send') }}">
         @csrf
         <button class="form__button-submit" type="submit">認証メールを再送信</button>
+      </form>
+    </div>
+    <div class="form__button">
+      <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button class="form__button-submit" type="submit">ログアウト</button>
       </form>
     </div>
   </div>
