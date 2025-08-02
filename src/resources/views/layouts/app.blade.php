@@ -20,7 +20,7 @@
         </a>
         <nav>
           <ul class="header-nav">
-            @if (Auth::check())
+            @if (Auth::check() && Auth::user()->hasVerifiedEmail())
               <li class="header-nav__item">
                 <a class="header-nav__link" href="/mypage">マイページ</a>
               </li>

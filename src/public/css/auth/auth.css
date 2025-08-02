@@ -1,4 +1,7 @@
-.register-form__content {
+/* 認証関連ページ共通スタイル */
+
+/* フォームコンテナ */
+.auth-form__content {
     position: absolute;
     width: 400px;
     height: 450px;
@@ -7,25 +10,35 @@
     transform: translateX(-50%);
 }
 
-.register-form__heading {
+/* ヘッダー部分 */
+.auth-form__heading {
     text-align: center;
     width: 100px;
     height: 50px;
     margin: 0 auto;
 }
 
-.register-form__heading-title {
+.verify-email__heading {
+    text-align: center;
+    width: 400px;
+    height: 100px;
+    margin: 0 auto;
+}
+
+.auth-form__heading-title {
     font-family: Inter;
     font-weight: 700;
     line-height: 100%;
     text-align: center;
 }
 
+/* フォーム全体 */
 .form {
     margin: 0 auto;
     text-align: center;
 }
 
+/* フォームグループ */
 .form__group {
     margin-bottom: 15px;
 }
@@ -41,6 +54,7 @@
     line-height: 100%;
 }
 
+/* エラーメッセージ */
 .form__error {
     height: 20px;
     color: #ff0000;
@@ -48,6 +62,7 @@
     font-size: 14px;
 }
 
+/* テキスト入力フィールド */
 .form__input--text input {
     width: 400px;
     height: 45px;
@@ -57,8 +72,10 @@
     font-size: 16px;
 }
 
+/* ボタンエリア */
 .form__button {
-    margin-top: 75px;
+    margin: 50px auto;
+    text-align: center;
 }
 
 .form__button-submit {
@@ -77,7 +94,8 @@
     text-align: center;
 }
 
-.login__link {
+/* リンクエリア */
+.auth__link {
     margin: 20px auto;
     text-align: center;
     align-content: center;
@@ -85,8 +103,42 @@
     height: 40px;
 }
 
-.login__button-submit {
+.auth__button-submit {
     color: #0073cc;
     text-decoration: none;
     font-size: 16px;
+}
+
+/* メール認証ページ専用 */
+.verify-email__content {
+    position: absolute;
+    width: 750px;
+    height: 300px;
+    top: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.verify-email__link {
+    margin: 20px auto;
+    text-align: center;
+    align-content: center;
+    width: 200px;
+    height: 40px;
+}
+
+.verify-email__button-submit {
+    text-decoration: none;
+    width: 250px;
+    height: 50px;
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #000000;
+    background: #d9d9d9;
+    cursor: pointer;
+    font-family: Inter;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 100%;
+    text-align: center;
 }
