@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Attendance Management</title>
+  <title>@yield('title')</title>
   <link rel="stylesheet" href="{{ asset('css/sanitize.css') }}">
   <link rel="stylesheet" href="{{ asset('css/common.css') }}">
   @yield('css')
@@ -16,11 +16,11 @@
     <div class="header__inner">
       <div class="header-utilities">
         <a class="header__logo" href="/">
-          Attendance Management
+          <img src="{{ asset('images/Free Market App Logo.svg') }}" alt="CorpTech フリマ">
         </a>
         <nav>
           <ul class="header-nav">
-            @if (Auth::check())
+            @if (Auth::check() && Auth::user()->hasVerifiedEmail())
               <li class="header-nav__item">
                 <a class="header-nav__link" href="/mypage">マイページ</a>
               </li>

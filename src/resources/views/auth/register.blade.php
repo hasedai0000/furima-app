@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('css')
-  <link rel="stylesheet" href="{{ asset('css/register.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/auth/auth.css') }}">
 @endsection
 
 @section('content')
-  <div class="register-form__content">
-    <div class="register-form__heading">
-      <h2>会員登録</h2>
+  <div class="auth-form__content">
+    <div class="auth-form__heading">
+      <h2 class="auth-form__heading-title">会員登録</h2>
     </div>
     <form class="form" action="/register" method="post">
       @csrf
@@ -70,8 +70,8 @@
         <button class="form__button-submit" type="submit">登録</button>
       </div>
     </form>
-    <div class="login__link">
-      <a class="login__button-submit" href="/login">ログインの方はこちら</a>
+    <div class="auth__link">
+      <a class="auth__button-submit" href="/login">ログインの方はこちら</a>
     </div>
   </div>
 @endsection
