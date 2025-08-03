@@ -96,11 +96,9 @@ return [
     'password'             => 'パスワードは8文字以上で入力してください。',
     'present'              => ':attributeが存在している必要があります。',
     'regex'                => ':attributeには、有効な正規表現を指定してください。',
-    'required'             => [
-        'string' => ':attributeを入力してください。',
-        'email' => ':attributeを入力してください。',
-        'password' => ':attributeを入力してください。',
-    ],
+    'required'             => ':attributeを入力してください。',
+    'required_string'      => ':attributeを入力してください。',
+    'required_email'       => ':attributeを入力してください。',
     'required_if'          => ':otherが:valueの場合、:attributeを指定してください。',
     'required_unless'      => ':otherが:values以外の場合、:attributeを指定してください。',
     'required_with'        => ':valuesが指定されている場合、:attributeも指定してください。',
@@ -137,6 +135,9 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'password' => [
+            'confirmed' => '確認用パスワードと一致しません。',
+        ],
     ],
 
     /*
@@ -150,5 +151,10 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'email' => 'メールアドレス',
+        'password' => 'パスワード',
+        'name' => 'お名前',
+        'password_confirmation' => '確認用パスワード',
+    ],
 ];
