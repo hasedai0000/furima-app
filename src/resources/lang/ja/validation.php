@@ -97,8 +97,6 @@ return [
     'present'              => ':attributeが存在している必要があります。',
     'regex'                => ':attributeには、有効な正規表現を指定してください。',
     'required'             => ':attributeを入力してください。',
-    'required_string'      => ':attributeを入力してください。',
-    'required_email'       => ':attributeを入力してください。',
     'required_if'          => ':otherが:valueの場合、:attributeを指定してください。',
     'required_unless'      => ':otherが:values以外の場合、:attributeを指定してください。',
     'required_with'        => ':valuesが指定されている場合、:attributeも指定してください。',
