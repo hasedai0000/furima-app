@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Actions\Fortify\CreateNewUser;
-use App\Actions\Fortify\ResetUserPassword;
-use App\Actions\Fortify\UpdateUserPassword;
-use App\Actions\Fortify\UpdateUserProfileInformation;
+use App\Domain\User\Services\CreateUserService;
+use App\Domain\User\Services\ResetUserPasswordService;
+use App\Domain\User\Services\UpdateUserPasswordService;
+use App\Domain\Profile\Services\UpdateProfileInformationService;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -28,7 +28,13 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Fortify::createUsersUsing(CreateNewUser::class);
+        Fortify::createUsersUsing(CreateUserService::class);
+
+        Fortify::updateUserProfileInformationUsing(UpdateProfileInformationService::class);
+
+        Fortify::updateUserPasswordsUsing(UpdateUserPasswordService::class);
+
+        Fortify::resetUserPasswordsUsing(ResetUserPasswordService::class);
 
         Fortify::registerView(function () {
             return view('auth.register');
