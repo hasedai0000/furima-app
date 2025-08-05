@@ -1,30 +1,33 @@
 <?php
 
-namespace App\Domain\User\Entities;
+namespace App\Domain\Profile\Entities;
+
+use App\Domain\Profile\ValueObjects\ProfileImgUrl;
+use App\Domain\Profile\ValueObjects\ProfilePostCode;
 
 class Profile
 {
  private $id;
- private $user_id;
- private $img_url;
+ private $userId;
+ private $imgUrl;
  private $postcode;
  private $address;
- private $building_name;
+ private $buildingName;
 
  public function __construct(
   string $id,
-  string $user_id,
-  string $img_url,
-  string $postcode,
+  string $userId,
+  ?ProfileImgUrl $imgUrl,
+  ProfilePostCode $postcode,
   string $address,
-  string $building_name
+  string $buildingName
  ) {
   $this->id = $id;
-  $this->user_id = $user_id;
-  $this->img_url = $img_url;
+  $this->userId = $userId;
+  $this->imgUrl = $imgUrl;
   $this->postcode = $postcode;
   $this->address = $address;
-  $this->building_name = $building_name;
+  $this->buildingName = $buildingName;
  }
 
  public function getId(): int
@@ -34,15 +37,15 @@ class Profile
 
  public function getUserId(): string
  {
-  return $this->user_id;
+  return $this->userId;
  }
 
- public function getImgUrl(): string
+ public function getImgUrl(): ?ProfileImgUrl
  {
-  return $this->img_url;
+  return $this->imgUrl;
  }
 
- public function getPostcode(): string
+ public function getPostcode(): ProfilePostCode
  {
   return $this->postcode;
  }
@@ -54,15 +57,15 @@ class Profile
 
  public function getBuildingName(): string
  {
-  return $this->building_name;
+  return $this->buildingName;
  }
 
- public function setImgUrl(string $img_url): void
+ public function setImgUrl(?ProfileImgUrl $imgUrl): void
  {
-  $this->img_url = $img_url;
+  $this->imgUrl = $imgUrl;
  }
 
- public function setPostcode(string $postcode): void
+ public function setPostcode(ProfilePostCode $postcode): void
  {
   $this->postcode = $postcode;
  }
@@ -72,9 +75,9 @@ class Profile
   $this->address = $address;
  }
 
- public function setBuildingName(string $building_name): void
+ public function setBuildingName(string $buildingName): void
  {
-  $this->building_name = $building_name;
+  $this->buildingName = $buildingName;
  }
 
  /**
@@ -86,11 +89,11 @@ class Profile
  {
   return [
    'id' => $this->id,
-   'user_id' => $this->user_id,
-   'img_url' => $this->img_url,
-   'postcode' => $this->postcode,
+   'userId' => $this->userId,
+   'imgUrl' => $this->imgUrl ? $this->imgUrl->value() : null,
+   'postcode' => $this->postcode->value(),
    'address' => $this->address,
-   'building_name' => $this->building_name,
+   'buildingName' => $this->buildingName,
   ];
  }
 }
