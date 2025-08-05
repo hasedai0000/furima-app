@@ -142,3 +142,11 @@
     line-height: 100%;
     text-align: center;
 }
+
+/* プロフィールページ専用 */
+.profile-form__heading {
+    text-align: center;
+    width: 200px;
+    height: 50px;
+    margin: 0 auto;
+}
