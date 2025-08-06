@@ -14,7 +14,7 @@ class User
 
   public function __construct(
     string $id,
-    int $name,
+    string $name,
     UserEmail $email,
     UserPassword $password
   ) {

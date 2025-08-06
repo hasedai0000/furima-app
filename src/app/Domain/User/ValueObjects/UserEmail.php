@@ -24,10 +24,6 @@ class UserEmail
       throw new \DomainException('メールアドレスは1文字以上で入力してください');
     }
 
-    if (User::where('email', $value)->exists()) {
-      throw new \DomainException('このメールアドレスはすでに使用されています');
-    }
-
     // メールアドレスの存在チェック
     if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
       throw new \DomainException('メールアドレスの形式が正しくありません');

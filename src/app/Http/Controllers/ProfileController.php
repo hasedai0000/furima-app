@@ -3,16 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Application\Services\ProfileService;
+use App\Application\Services\UserService;
+use App\Http\Requests\Profile\ProfileStoreRequest;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
   private $profileService;
+  private $userService;
 
   public function __construct(
-    ProfileService $profileService
+    ProfileService $profileService,
+    UserService $userService
   ) {
     $this->profileService = $profileService;
+    $this->userService = $userService;
   }
 
   /**
@@ -22,37 +27,48 @@ class ProfileController extends Controller
    */
   public function show()
   {
-    return view('mypage.profile');
+    try {
+      $user = $this->userService->getUser(auth()->id());
+    } catch (\Exception $e) {
+      return back()->withErrors(['error' => $e->getMessage()]);
+    }
+
+    return view('mypage.profile', [
+      'name' => $user->getName()
+    ]);
   }
 
   /**
    * プロフィール作成
    *
-   * @param Request $request
+   * @param ProfileStoreRequest $request
    * @return \Illuminate\Http\RedirectResponse
    */
-  public function store(Request $request)
+  public function store(ProfileStoreRequest $request)
   {
     try {
       // バリデーション
-      $validatedData = $request->validate([
-        'name' => 'required|string|max:255',
-        'postcode' => 'required|string|max:8',
-        'address' => 'required|string|max:255',
-        'buildingName' => 'nullable|string|max:255',
-      ]);
+      $validatedData = $request->validated();
+
+      // 画像ファイルの処理
+      $imgUrl = null;
+      if ($request->hasFile('imgUrl') && $request->file('imgUrl')->isValid()) {
+        $file = $request->file('imgUrl');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $file->storeAs('public/profiles', $fileName);
+        $imgUrl = 'storage/profiles/' . $fileName;
+      }
 
       // アプリケーションサービスにロジックを委譲
-      $profile = $this->profileService->createProfile(
+      $this->profileService->createProfile(
         auth()->id(),
-        null, // imgUrlは後で実装
+        $imgUrl,
         $validatedData['postcode'],
         $validatedData['address'],
         $validatedData['buildingName']
       );
 
-      // 成功時のリダイレクト
-      return redirect()->route('mypage.profile.show')->with('success', 'プロフィールが更新されました。');
+      return redirect()->route('item.index')->with('success', 'プロフィールが正常に作成されました。');
     } catch (\Exception $e) {
       // エラーが発生した場合はエラーメッセージを表示
       return back()->withErrors(['error' => $e->getMessage()]);

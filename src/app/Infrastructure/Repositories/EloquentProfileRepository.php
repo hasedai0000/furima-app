@@ -19,14 +19,19 @@ class EloquentProfileRepository implements ProfileRepositoryInterface
     $eloquentProfile = Profile::find($profile->getId());
 
     if (!$eloquentProfile) {
-      // TODO:: 更新処理をここに実装
-      $eloquentProfile = new Profile();
-    } else {
-      // TODO:: 新規作成処理をここに実装
+      // 新規作成処理
       $eloquentProfile = new Profile();
       $eloquentProfile->id = $profile->getId();
       $eloquentProfile->user_id = $profile->getUserId();
-      $eloquentProfile->img_url = $profile->getImgUrl()->value();
+      $eloquentProfile->img_url = $profile->getImgUrl() ? $profile->getImgUrl()->value() : null;
+      $eloquentProfile->postcode = $profile->getPostcode()->value();
+      $eloquentProfile->address = $profile->getAddress();
+      $eloquentProfile->building_name = $profile->getBuildingName();
+      $eloquentProfile->save();
+    } else {
+      // 更新処理
+      $eloquentProfile->user_id = $profile->getUserId();
+      $eloquentProfile->img_url = $profile->getImgUrl() ? $profile->getImgUrl()->value() : null;
       $eloquentProfile->postcode = $profile->getPostcode()->value();
       $eloquentProfile->address = $profile->getAddress();
       $eloquentProfile->building_name = $profile->getBuildingName();

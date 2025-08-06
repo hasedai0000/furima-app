@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ItemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,4 +21,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/mypage/profile', [ProfileController::class, 'show'])->name('mypage.profile.show');
     Route::post('/mypage/profile', [ProfileController::class, 'store'])->name('mypage.profile.store');
+
+    Route::get('/items', [ItemController::class, 'index'])->name('item.index');
 });
