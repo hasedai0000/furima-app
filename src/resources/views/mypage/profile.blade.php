@@ -21,19 +21,10 @@
         <div class="form__group-content">
           <div class="profile-image__container">
             <div class="profile-image__preview">
-              @if (auth()->user()->profile && auth()->user()->profile->img_url)
-                <img src="{{ asset('storage/' . auth()->user()->profile->img_url) }}" alt="プロフィール画像"
-                  class="profile-image__current">
-              @else
-                <div class="profile-image__placeholder">
-                  <span></span>
-                </div>
-              @endif
+              <img class="profile-image__current" id="preview">
             </div>
-            <div class="profile-image__upload">
-              <input type="file" name="profile_image" id="profile_image" accept="image/*" class="profile-image__input">
-              <label for="profile_image" class="profile-image__button">画像を選択する</label>
-            </div>
+            <input type="file" name="imgUrl" id="imageInput" accept="image/*" class="profile-image__input">
+            <label for="imageInput" class="profile-image__button">画像を選択する</label>
           </div>
           <div class="form__error">
             @error('profile_image')
@@ -104,22 +95,21 @@
   </div>
 @endsection
 
-@section('js')
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const fileInput = document.getElementById('profile_image');
-      const preview = document.querySelector('.profile-image__preview');
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('imageInput');
+    const preview = document.getElementById('preview');
 
-      fileInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = function(e) {
-            preview.innerHTML = `<img src="${e.target.result}" alt="プレビュー画像" class="profile-image__current">`;
-          };
-          reader.readAsDataURL(file);
-        }
-      });
+    fileInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
     });
-  </script>
-@endsection
+  });
+</script>
