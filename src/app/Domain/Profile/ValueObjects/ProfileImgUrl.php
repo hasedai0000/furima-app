@@ -4,7 +4,7 @@ namespace App\Domain\Profile\ValueObjects;
 
 class ProfileImgUrl
 {
-  private $value;
+  private string $value;
 
   public function __construct(string $value)
   {
@@ -24,8 +24,8 @@ class ProfileImgUrl
       return;
     }
 
-    // ファイルパスの場合（storage/profiles/のような形式）
-    if (strpos($value, 'storage/') === 0 || strpos($value, '/storage/') === 0) {
+    // ファイルパスの場合（storage/のような形式）
+    if (strpos($value, 'storage/') === 0) {
       return;
     }
 

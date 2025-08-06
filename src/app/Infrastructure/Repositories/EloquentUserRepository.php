@@ -31,4 +31,20 @@ class EloquentUserRepository implements UserRepositoryInterface
       new UserPassword($eloquentUser->password),
     );
   }
+
+  /**
+   * ユーザー名を保存
+   *
+   * @param UserEntity $user
+   * @return void
+   */
+  public function save(UserEntity $user): void
+  {
+    $eloquentUser = User::find($user->getId());
+
+    if ($eloquentUser) {
+      $eloquentUser->name = $user->getName();
+      $eloquentUser->save();
+    }
+  }
 }

@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 
 class CreateUserService implements CreatesNewUsers
 {
@@ -19,11 +21,16 @@ class CreateUserService implements CreatesNewUsers
  {
   $this->validate($input);
 
-  return User::create([
+  $user = User::create([
    'name' => $input['name'],
    'email' => $input['email'],
    'password' => Hash::make($input['password']),
   ]);
+
+  // ユーザーをログイン状態にする
+  Auth::login($user);
+
+  return $user;
  }
 
  /**

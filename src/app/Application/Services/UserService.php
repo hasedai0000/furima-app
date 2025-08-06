@@ -23,4 +23,31 @@ class UserService
   {
     return $this->userRepository->findById($userId);
   }
+
+  /**
+   * ユーザー名を更新
+   *
+   * @param string $userId
+   * @param string $name
+   * @return UserEntity
+   */
+  public function updateUserName(string $userId, string $name): UserEntity
+  {
+    $user = $this->getUser($userId);
+
+    if (!$user) {
+      throw new \Exception('ユーザーが見つかりません。');
+    }
+
+    $user = new UserEntity(
+      $user->getId(),
+      $name,
+      $user->getEmail(),
+      $user->getPassword()
+    );
+
+    $this->userRepository->save($user);
+
+    return $user;
+  }
 }

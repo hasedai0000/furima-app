@@ -4,7 +4,7 @@ namespace App\Http\Requests\Profile;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProfileStoreRequest extends FormRequest
+class ProfileUpdateRequest extends FormRequest
 {
   /**
    * 認可

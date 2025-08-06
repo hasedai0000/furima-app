@@ -48,6 +48,9 @@ class FortifyServiceProvider extends ServiceProvider
             return view('auth.verify-email');
         });
 
+        // 新規登録後のリダイレクト先を設定
+        Fortify::redirects('register', '/email/verify');
+
         RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->email;
 

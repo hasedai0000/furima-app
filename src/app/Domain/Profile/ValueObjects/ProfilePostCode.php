@@ -4,7 +4,7 @@ namespace App\Domain\Profile\ValueObjects;
 
 class ProfilePostCode
 {
-  private $value;
+  private string $value;
 
   public function __construct(string $value)
   {
