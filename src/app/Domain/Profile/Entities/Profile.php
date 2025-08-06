@@ -7,12 +7,12 @@ use App\Domain\Profile\ValueObjects\ProfilePostCode;
 
 class Profile
 {
- private $id;
- private $userId;
- private $imgUrl;
- private $postcode;
- private $address;
- private $buildingName;
+ private string $id;
+ private string $userId;
+ private ?ProfileImgUrl $imgUrl;
+ private ProfilePostCode $postcode;
+ private string $address;
+ private string $buildingName;
 
  public function __construct(
   string $id,
@@ -30,7 +30,7 @@ class Profile
   $this->buildingName = $buildingName;
  }
 
- public function getId(): int
+ public function getId(): string
  {
   return $this->id;
  }

@@ -4,7 +4,7 @@ namespace App\Domain\Profile\ValueObjects;
 
 class ProfileImgUrl
 {
-  private $value;
+  private string $value;
 
   public function __construct(string $value)
   {
@@ -14,23 +14,23 @@ class ProfileImgUrl
 
   public function validateImgUrl(string $value): void
   {
-    // 画像のファイル形式のチェック
-    $allowedExtensions = ['jpg', 'jpeg', 'png'];
-    $extension = pathinfo($value, PATHINFO_EXTENSION);
-    if (!in_array($extension, $allowedExtensions)) {
-      throw new \DomainException('画像のファイル形式が正しくありません。jpg, jpeg, pngのみ対応しています。');
+    // 空文字列の場合は許可（nullの代わり）
+    if (empty(trim($value))) {
+      return;
     }
 
-    // ファイルサイズのチェック
-    $maxSize = 10 * 1024 * 1024; // 10MB
-    if (filesize($value) > $maxSize) {
-      throw new \DomainException('画像のファイルサイズが大きすぎます。10MB以下にしてください。');
+    // URLの場合
+    if (filter_var($value, FILTER_VALIDATE_URL)) {
+      return;
     }
 
-    // 画像URLの形式が正しいか確認
-    if (!filter_var($value, FILTER_VALIDATE_URL)) {
-      throw new \DomainException('画像URLの形式が正しくありません');
+    // ファイルパスの場合（storage/のような形式）
+    if (strpos($value, 'storage/') === 0) {
+      return;
     }
+
+    // その他の場合はエラー
+    throw new \DomainException('画像URLの形式が正しくありません');
   }
 
   public function value(): string
@@ -50,7 +50,6 @@ class ProfileImgUrl
   {
     return $this->value === $other->value;
   }
-
 
   public function __toString(): string
   {

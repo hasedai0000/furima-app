@@ -7,14 +7,14 @@ use App\Domain\User\ValueObjects\UserPassword;
 
 class User
 {
-  private $id;
-  private $name;
-  private $email;
-  private $password;
+  private string $id;
+  private string $name;
+  private UserEmail $email;
+  private UserPassword $password;
 
   public function __construct(
     string $id,
-    int $name,
+    string $name,
     UserEmail $email,
     UserPassword $password
   ) {
@@ -24,7 +24,7 @@ class User
     $this->password = $password;
   }
 
-  public function getId(): int
+  public function getId(): string
   {
     return $this->id;
   }

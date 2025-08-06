@@ -4,7 +4,7 @@ namespace App\Domain\Profile\ValueObjects;
 
 class ProfilePostCode
 {
-  private $value;
+  private string $value;
 
   public function __construct(string $value)
   {
@@ -14,13 +14,16 @@ class ProfilePostCode
 
   public function validatePostCode(string $value): void
   {
-    // 郵便番号の桁数が正しいか確認
-    if (strlen($value) !== 8) {
+    // ハイフンを除去して数字のみの文字列を作成
+    $numericValue = str_replace('-', '', $value);
+
+    // 郵便番号の桁数が正しいか確認（7桁）
+    if (strlen($numericValue) !== 7) {
       throw new \DomainException('郵便番号の桁数が正しくありません。');
     }
 
     // 郵便番号が数字のみか確認
-    if (!ctype_digit($value)) {
+    if (!ctype_digit($numericValue)) {
       throw new \DomainException('郵便番号は数字で入力してください。');
     }
   }
@@ -42,7 +45,6 @@ class ProfilePostCode
   {
     return $this->value === $other->value;
   }
-
 
   public function __toString(): string
   {

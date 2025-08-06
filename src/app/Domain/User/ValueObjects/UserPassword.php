@@ -6,7 +6,7 @@ use App\Models\User;
 
 class UserPassword
 {
-  private $value;
+  private string $value;
 
   public function __construct(string $value)
   {
@@ -22,11 +22,6 @@ class UserPassword
 
     if (mb_strlen($value) < 8) {
       throw new \DomainException('パスワードは8文字以上で入力してください');
-    }
-
-    // パスワードは英数字の組み合わせであることを確認
-    if (!preg_match('/^[a-zA-Z0-9]+$/', $value)) {
-      throw new \DomainException('パスワードは英数字のみで入力してください');
     }
   }
 

@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ItemController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,8 +19,9 @@ use App\Http\Controllers\ProfileController;
 */
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/', [AuthController::class, 'index'])->name('index');
-
     Route::get('/mypage/profile', [ProfileController::class, 'show'])->name('mypage.profile.show');
     Route::post('/mypage/profile', [ProfileController::class, 'store'])->name('mypage.profile.store');
+    Route::put('/mypage/profile', [ProfileController::class, 'update'])->name('mypage.profile.update');
 });
+
+Route::get('/', [ItemController::class, 'index'])->name('item.index');
