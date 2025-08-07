@@ -27,7 +27,7 @@
       <div class="form__group-content">
         <div class="profile-image__container">
           <div class="profile-image__preview">
-            <img src="{{ asset($profile['imgUrl']) }}" class="profile-image__current" id="preview">
+            <img src="{{ asset($profile ? $profile['imgUrl'] : '') }}" class="profile-image__current" id="preview">
           </div>
           <input type="file" name="imgUrl" id="imageInput" accept="image/*" class="profile-image__input">
           <label for="imageInput" class="profile-image__button">画像を選択する</label>
