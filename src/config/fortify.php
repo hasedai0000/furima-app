@@ -158,6 +158,7 @@ return [
     ],
 
     'redirects' => [
+        'login' => '/',
         'logout' => '/login',
     ],
 ];

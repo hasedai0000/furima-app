@@ -10,7 +10,6 @@ class Item extends Model
 {
  use HasFactory;
 
- protected $table = 'items';
  protected $keyType = 'string';
  public $incrementing = false;
 

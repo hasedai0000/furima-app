@@ -22,6 +22,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/mypage/profile', [ProfileController::class, 'show'])->name('mypage.profile.show');
     Route::post('/mypage/profile', [ProfileController::class, 'store'])->name('mypage.profile.store');
     Route::put('/mypage/profile', [ProfileController::class, 'update'])->name('mypage.profile.update');
+
+    Route::get('/items', [ItemController::class, 'mylist'])->name('items.mylist');
 });
 
 Route::get('/', [ItemController::class, 'index'])->name('item.index');
+Route::get('/items', [ItemController::class, 'index'])->name('items.index');
