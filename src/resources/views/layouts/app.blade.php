@@ -17,9 +17,13 @@
       <a class="header__logo" href="/">
         <img src="{{ asset('images/Free Market App Logo.svg') }}" alt="CorpTech フリマ">
       </a>
-      <div class="header__search">
-        <input type="text" class="header__search-input" placeholder="なにをお探しですか?">
-      </div>
+      <form class="header__search" action="/" method="GET">
+        <input type="text" name="search" class="header__search-input" placeholder="なにをお探しですか?"
+          value="{{ request('search', '') }}">
+        @if (request('tab'))
+          <input type="hidden" name="tab" value="{{ request('tab') }}">
+        @endif
+      </form>
       <nav>
         <ul class="header-nav">
           @if (Auth::check() && Auth::user()->hasVerifiedEmail())

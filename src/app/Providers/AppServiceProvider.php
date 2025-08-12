@@ -9,15 +9,15 @@ use App\Infrastructure\Repositories\EloquentUserRepository;
 use App\Domain\Item\Repositories\ItemRepositoryInterface;
 use App\Infrastructure\Repositories\EloquentItemRepository;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         // ProfileRepositoryInterfaceの実装クラスを登録
         $this->app->bind(ProfileRepositoryInterface::class, EloquentProfileRepository::class);
@@ -27,11 +27,20 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        //
+        // 開発環境でのみSQLログを有効化
+        if (config('app.debug')) {
+            DB::listen(function ($query) {
+                Log::info(
+                    $query->sql,
+                    [
+                        'bindings' => $query->bindings,
+                        'time' => $query->time
+                    ]
+                );
+            });
+        }
     }
 }

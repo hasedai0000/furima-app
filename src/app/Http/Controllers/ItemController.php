@@ -18,49 +18,22 @@ class ItemController extends Controller
     $this->itemService = $itemService;
   }
 
-  public function index()
+  public function index(Request $request)
   {
-    $items = $this->itemService->getItems();
-    return view('items.index', compact('items'));
-  }
+    // 検索パラメータがある場合は検索を実行
+    $searchTerm = $request->filled('search') ? $request->input('search') : '';
 
-  public function mylist(Request $request)
-  {
-    $tab = $request->query('tab');
-    if ($tab === 'mylist') {
-      // 暫定処理
-      $items = $this->getMyListItems();
+    // クエリパラメータでtab=mylistの場合はマイリストを表示
+    if ($request->query('tab') === 'mylist') {
+      // 認証チェックz
+      if (!Auth::check()) {
+        return redirect()->route('login');
+      }
+      $items = $this->itemService->getMyListItems($searchTerm);
+    } else {
+      $items = $this->itemService->getItems($searchTerm);
     }
 
-    return view('items.index', compact('tab', 'items'));
-  }
-
-  /**
-   * おすすめ商品を取得
-   */
-  private function getRecommendedItems()
-  {
-    // 基本的な商品一覧を取得
-    return Item::with(['category', 'user'])
-      ->orderBy('created_at', 'desc')
-      ->paginate(12);
-  }
-
-  /**
-   * マイリスト（お気に入り）の商品を取得
-   */
-  private function getMyListItems()
-  {
-    if (!Auth::check()) {
-      return collect(); // 未ログインの場合は空のコレクション
-    }
-
-    // ログインユーザーがお気に入りした商品を取得
-    return Item::whereHas('likes', function ($query) {
-      $query->where('user_id', Auth::id());
-    })
-      ->with(['category', 'user'])
-      ->orderBy('created_at', 'desc')
-      ->paginate(12);
+    return view('items.index', compact('items', 'searchTerm'));
   }
 }

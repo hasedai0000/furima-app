@@ -6,5 +6,7 @@ use App\Domain\Item\Entities\Item as ItemEntity;
 
 interface ItemRepositoryInterface
 {
-  public function findAll(): array;
+  public function findAll(string $searchTerm): array;
+  public function findAllExcludingUser(string $userId, string $searchTerm): array;
+  public function findMyListItems(string $userId, string $searchTerm): array;
 }
