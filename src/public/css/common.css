@@ -140,6 +140,90 @@ a:hover {
 }
 
 /* レスポンシブ対応 */
+/* PC (1400-1540px) */
+@media (min-width: 1400px) and (max-width: 1540px) {
+    .header__inner {
+        max-width: 1200px;
+        padding: 0 40px;
+    }
+
+    .header__logo {
+        font-size: 22px;
+    }
+
+    .header__logo img {
+        height: 36px;
+    }
+
+    .header__search {
+        max-width: 350px;
+    }
+
+    .header__search-input {
+        padding: 12px 18px;
+        font-size: 15px;
+    }
+
+    .header-nav {
+        gap: 20px;
+    }
+
+    .header-nav__link,
+    .header-nav__button {
+        font-size: 15px;
+    }
+
+    .header-nav__button--primary {
+        padding: 10px 20px;
+        font-size: 15px;
+    }
+}
+
+/* タブレット (768-850px) */
+@media (min-width: 768px) and (max-width: 850px) {
+    .header {
+        height: 70px;
+    }
+
+    .header__inner {
+        max-width: 100%;
+        padding: 0 30px;
+        gap: 15px;
+    }
+
+    .header__logo {
+        font-size: 20px;
+    }
+
+    .header__logo img {
+        height: 32px;
+    }
+
+    .header__search {
+        max-width: 300px;
+        min-width: 180px;
+    }
+
+    .header__search-input {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+
+    .header-nav {
+        gap: 12px;
+    }
+
+    .header-nav__link,
+    .header-nav__button {
+        font-size: 14px;
+    }
+
+    .header-nav__button--primary {
+        padding: 7px 14px;
+        font-size: 14px;
+    }
+}
+
 @media (max-width: 768px) {
     .header__inner {
         flex-wrap: wrap;

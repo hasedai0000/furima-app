@@ -36,4 +36,10 @@ class ItemController extends Controller
 
     return view('items.index', compact('items', 'searchTerm'));
   }
+
+  public function detail($id)
+  {
+    $item = $this->itemService->getItem($id);
+    return view('items.detail', compact('item'));
+  }
 }

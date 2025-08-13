@@ -24,4 +24,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/mypage/profile', [ProfileController::class, 'update'])->name('mypage.profile.update');
 });
 
+// Item関連ルート
 Route::get('/', [ItemController::class, 'index'])->name('items.index');
+Route::get('/items/{id}', [ItemController::class, 'detail'])->name('items.detail');

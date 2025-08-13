@@ -15,21 +15,26 @@ class Item
   private int $price;
   private string $condition;
   private ItemImgUrl $imgUrl;
+  private array $categories = [];
 
   public function __construct(
     string $id,
+    string $userId,
     string $name,
     string $description,
     int $price,
     string $condition,
-    ItemImgUrl $imgUrl
+    ItemImgUrl $imgUrl,
+    array $categories
   ) {
     $this->id = $id;
+    $this->userId = $userId;
     $this->name = $name;
     $this->description = $description;
     $this->price = $price;
     $this->condition = $condition;
     $this->imgUrl = $imgUrl;
+    $this->categories = $categories;
   }
 
   public function getId(): string
@@ -97,6 +102,16 @@ class Item
     $this->imgUrl = $imgUrl;
   }
 
+  public function getCategories(): array
+  {
+    return $this->categories;
+  }
+
+  public function setCategories(array $categories): void
+  {
+    $this->categories = $categories;
+  }
+
   /**
    * エンティティを配列に変換する
    *
@@ -112,6 +127,7 @@ class Item
       'price' => $this->price,
       'condition' => $this->condition,
       'imgUrl' => $this->imgUrl->value(),
+      'categories' => $this->categories,
     ];
   }
 }

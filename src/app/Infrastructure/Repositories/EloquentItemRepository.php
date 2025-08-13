@@ -4,6 +4,7 @@ namespace App\Infrastructure\Repositories;
 
 use App\Domain\Item\Entities\Item as ItemEntity;
 use App\Domain\Item\Repositories\ItemRepositoryInterface;
+use App\Domain\Item\ValueObjects\ItemImgUrl;
 use App\Models\Item;
 
 class EloquentItemRepository implements ItemRepositoryInterface
@@ -57,5 +58,31 @@ class EloquentItemRepository implements ItemRepositoryInterface
       ->orderBy('created_at', 'desc')
       ->get()
       ->toArray();
+  }
+
+  /**
+   * 商品詳細を取得
+   *
+   * @param string $id
+   * @return ItemEntity|null
+   */
+  public function findById(string $id): ?ItemEntity
+  {
+    $eloquentItem = Item::with('categories')->find($id);
+
+    if (!$eloquentItem) {
+      return null;
+    }
+
+    return new ItemEntity(
+      $eloquentItem->id,
+      $eloquentItem->user_id,
+      $eloquentItem->name,
+      $eloquentItem->description,
+      (int) $eloquentItem->price,
+      $eloquentItem->condition,
+      new ItemImgUrl($eloquentItem->img_url),
+      $eloquentItem->categories->toArray()
+    );
   }
 }

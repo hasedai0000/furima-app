@@ -45,6 +45,12 @@ class ItemService
     return $items;
   }
 
+  /**
+   * マイリストの商品を取得
+   *
+   * @param string $searchTerm
+   * @return array
+   */
   public function getMyListItems(string $searchTerm): array
   {
     $items = $this->itemRepository->findMyListItems(Auth::id(), $searchTerm);
@@ -62,5 +68,17 @@ class ItemService
     }, $items);
 
     return $items;
+  }
+
+  /**
+   * 商品詳細を取得
+   *
+   * @param string $id
+   * @return array
+   */
+  public function getItem(string $id): array
+  {
+    $item = $this->itemRepository->findById($id);
+    return $item->toArray();
   }
 }

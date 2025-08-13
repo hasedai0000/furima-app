@@ -47,18 +47,20 @@
 
     <div class="items__grid">
       @foreach ($items as $item)
-        <div class="item-card">
-          <div class="item-card__image">
-            <img src="{{ $item['imgUrl'] }}" alt="{{ $item['name'] }}" class="item-card__img">
-            @if ($item['isSold'])
-              <div class="item-card__sold">
-                <span class="sold-label">SOLD</span>
-              </div>
-            @endif
+        <a href="{{ route('items.detail', $item['id']) }}">
+          <div class="item-card">
+            <div class="item-card__image">
+              <img src="{{ $item['imgUrl'] }}" alt="{{ $item['name'] }}" class="item-card__img">
+              @if ($item['isSold'])
+                <div class="item-card__sold">
+                  <span class="sold-label">SOLD</span>
+                </div>
+              @endif
+            </div>
+            <div class="item-card__name">{{ $item['name'] }}</div>
+            <div class="item-card__price">¥{{ number_format($item['price']) }}</div>
           </div>
-          <div class="item-card__name">{{ $item['name'] }}</div>
-          <div class="item-card__price">¥{{ number_format($item['price']) }}</div>
-        </div>
+        </a>
       @endforeach
     </div>
   </div>
