@@ -3,8 +3,6 @@
 namespace App\Domain\Item\Entities;
 
 use App\Domain\Item\ValueObjects\ItemImgUrl;
-use App\Domain\Item\ValueObjects\ItemName;
-use App\Domain\Item\ValueObjects\ItemPrice;
 
 class Item
 {
@@ -15,7 +13,10 @@ class Item
   private int $price;
   private string $condition;
   private ItemImgUrl $imgUrl;
+  private bool $isSold;
   private array $categories = [];
+  private array $comments = [];
+  private array $likes = [];
 
   public function __construct(
     string $id,
@@ -25,7 +26,10 @@ class Item
     int $price,
     string $condition,
     ItemImgUrl $imgUrl,
-    array $categories
+    bool $isSold,
+    array $categories,
+    array $comments,
+    array $likes
   ) {
     $this->id = $id;
     $this->userId = $userId;
@@ -34,13 +38,22 @@ class Item
     $this->price = $price;
     $this->condition = $condition;
     $this->imgUrl = $imgUrl;
+    $this->isSold = $isSold;
     $this->categories = $categories;
+    $this->comments = $comments;
+    $this->likes = $likes;
   }
 
   public function getId(): string
   {
     return $this->id;
   }
+
+  public function getUserId(): string
+  {
+    return $this->userId;
+  }
+
 
   public function getName(): string
   {
@@ -67,9 +80,24 @@ class Item
     return $this->imgUrl;
   }
 
-  public function getUserId(): string
+  public function getIsSold(): bool
   {
-    return $this->userId;
+    return $this->isSold;
+  }
+
+  public function getCategories(): array
+  {
+    return $this->categories;
+  }
+
+  public function getComments(): array
+  {
+    return $this->comments;
+  }
+
+  public function getLikes(): array
+  {
+    return $this->likes;
   }
 
   public function setUserId(string $userId): void
@@ -102,14 +130,24 @@ class Item
     $this->imgUrl = $imgUrl;
   }
 
-  public function getCategories(): array
+  public function setIsSold(bool $isSold): void
   {
-    return $this->categories;
+    $this->isSold = $isSold;
   }
 
   public function setCategories(array $categories): void
   {
     $this->categories = $categories;
+  }
+
+  public function setComments(array $comments): void
+  {
+    $this->comments = $comments;
+  }
+
+  public function setLikes(array $likes): void
+  {
+    $this->likes = $likes;
   }
 
   /**
@@ -127,7 +165,10 @@ class Item
       'price' => $this->price,
       'condition' => $this->condition,
       'imgUrl' => $this->imgUrl->value(),
+      'isSold' => $this->isSold,
       'categories' => $this->categories,
+      'comments' => $this->comments,
+      'likes' => $this->likes,
     ];
   }
 }

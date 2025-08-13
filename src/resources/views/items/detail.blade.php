@@ -10,7 +10,12 @@
       <!-- 商品画像エリア -->
       <div class="item-detail__image-area">
         <div class="item-detail__image-placeholder">
-          <span><img src="{{ $item['imgUrl'] }}" alt="{{ $item['name'] }}" class="item-detail__img"></span>
+          <img src="{{ $item['imgUrl'] }}" alt="{{ $item['name'] }}" class="item-detail__img">
+          @if ($item['isSold'])
+            <div class="item-detail__sold">
+              <span class="sold-label">SOLD</span>
+            </div>
+          @endif
         </div>
       </div>
 
@@ -26,11 +31,11 @@
         <div class="item-detail__metrics">
           <div class="item-detail__metric">
             <div class="item-detail__metric-icon">★</div>
-            <span class="item-detail__metric-count">3</span>
+            <span class="item-detail__metric-count">{{ count($item['likes']) }}</span>
           </div>
           <div class="item-detail__metric">
             <div class="item-detail__metric-icon">💬</div>
-            <span class="item-detail__metric-count">1</span>
+            <span class="item-detail__metric-count">{{ count($item['comments']) }}</span>
           </div>
         </div>
 
@@ -72,18 +77,21 @@
 
         <!-- コメントセクション -->
         <div class="item-detail__section">
-          <h2 class="item-detail__section-title">コメント(1)</h2>
+          <h2 class="item-detail__section-title">コメント({{ count($item['comments']) }})</h2>
 
-          <!-- 既存のコメント -->
-          <div class="item-detail__comment">
-            <div class="item-detail__comment-header">
-              <div class="item-detail__comment-avatar"></div>
-              <span class="item-detail__comment-author">admin</span>
-            </div>
-            <div class="item-detail__comment-content">
-              こちらにコメントが入ります。
-            </div>
-          </div>
+          @if (isset($item['comments']) && count($item['comments']) > 0)
+            @foreach ($item['comments'] as $comment)
+              <div class="item-detail__comment">
+                <div class="item-detail__comment-header">
+                  <div class="item-detail__comment-avatar"></div>
+                  <span class="item-detail__comment-author"></span>
+                </div>
+                <div class="item-detail__comment-content">
+                  {{ $comment['content'] }}
+                </div>
+              </div>
+            @endforeach
+          @endif
 
           <!-- コメント投稿フォーム -->
           <div class="item-detail__comment-form">

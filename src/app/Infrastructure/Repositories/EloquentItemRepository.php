@@ -68,7 +68,7 @@ class EloquentItemRepository implements ItemRepositoryInterface
    */
   public function findById(string $id): ?ItemEntity
   {
-    $eloquentItem = Item::with('categories')->find($id);
+    $eloquentItem = Item::with('purchases', 'categories', 'comments', 'likes')->find($id);
 
     if (!$eloquentItem) {
       return null;
@@ -82,7 +82,10 @@ class EloquentItemRepository implements ItemRepositoryInterface
       (int) $eloquentItem->price,
       $eloquentItem->condition,
       new ItemImgUrl($eloquentItem->img_url),
-      $eloquentItem->categories->toArray()
+      $eloquentItem->purchases->toArray() ? true : false,
+      $eloquentItem->categories->toArray(),
+      $eloquentItem->comments->toArray(),
+      $eloquentItem->likes->toArray()
     );
   }
 }
