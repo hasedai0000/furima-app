@@ -68,7 +68,7 @@ class EloquentItemRepository implements ItemRepositoryInterface
    */
   public function findById(string $id): ?ItemEntity
   {
-    $eloquentItem = Item::with('purchases', 'categories', 'comments', 'likes')->find($id);
+    $eloquentItem = Item::with('purchases', 'categories', 'comments.user', 'likes')->find($id);
 
     if (!$eloquentItem) {
       return null;

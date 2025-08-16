@@ -3,16 +3,20 @@
 namespace App\Application\Services;
 
 use App\Domain\Item\Repositories\ItemRepositoryInterface;
+use App\Domain\Item\Services\LikeService;
 use Illuminate\Support\Facades\Auth;
 
 class ItemService
 {
   private $itemRepository;
+  private $likeService;
 
   public function __construct(
-    ItemRepositoryInterface $itemRepository
+    ItemRepositoryInterface $itemRepository,
+    LikeService $likeService
   ) {
     $this->itemRepository = $itemRepository;
+    $this->likeService = $likeService;
   }
 
   /**
@@ -79,6 +83,15 @@ class ItemService
   public function getItem(string $id): array
   {
     $item = $this->itemRepository->findById($id);
-    return $item->toArray();
+    $itemArray = $item->toArray();
+
+    // ログインユーザーがいいねしているかどうかを追加
+    if (Auth::check()) {
+      $itemArray['isLiked'] = $this->likeService->isLiked($id);
+    } else {
+      $itemArray['isLiked'] = false;
+    }
+
+    return $itemArray;
   }
 }

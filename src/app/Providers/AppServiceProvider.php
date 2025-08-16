@@ -8,6 +8,10 @@ use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Repositories\EloquentUserRepository;
 use App\Domain\Item\Repositories\ItemRepositoryInterface;
 use App\Infrastructure\Repositories\EloquentItemRepository;
+use App\Domain\Item\Repositories\CommentRepositoryInterface;
+use App\Infrastructure\Repositories\EloquentCommentRepository;
+use App\Domain\Item\Repositories\LikeRepositoryInterface;
+use App\Infrastructure\Repositories\EloquentLikeRepository;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -23,6 +27,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ProfileRepositoryInterface::class, EloquentProfileRepository::class);
         $this->app->bind(UserRepositoryInterface::class, EloquentUserRepository::class);
         $this->app->bind(ItemRepositoryInterface::class, EloquentItemRepository::class);
+        $this->app->bind(CommentRepositoryInterface::class, EloquentCommentRepository::class);
+        $this->app->bind(LikeRepositoryInterface::class, EloquentLikeRepository::class);
     }
 
     /**

@@ -5,6 +5,12 @@
 @endsection
 
 @section('content')
+  @if (session('success'))
+    <div class="success-message">
+      {{ session('success') }}
+    </div>
+  @endif
+
   <div class="item-detail">
     <div class="item-detail__container">
       <!-- 商品画像エリア -->
@@ -30,8 +36,24 @@
         <!-- エンゲージメント指標 -->
         <div class="item-detail__metrics">
           <div class="item-detail__metric">
-            <div class="item-detail__metric-icon">★</div>
-            <span class="item-detail__metric-count">{{ count($item['likes']) }}</span>
+            @auth
+              <form action="{{ route('items.like', ['item_id' => $item['id']]) }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit" class="item-detail__like-button">
+                  @if (isset($item['isLiked']) && $item['isLiked'])
+                    <div class="item-detail__metric-icon liked">★</div>
+                  @else
+                    <div class="item-detail__metric-icon">★</div>
+                  @endif
+                  <span class="item-detail__metric-count">{{ count($item['likes']) }}</span>
+                </button>
+              </form>
+            @else
+              <a href="{{ route('login') }}" class="item-detail__like-button">
+                <div class="item-detail__metric-icon">★</div>
+                <span class="item-detail__metric-count">{{ count($item['likes']) }}</span>
+              </a>
+            @endauth
           </div>
           <div class="item-detail__metric">
             <div class="item-detail__metric-icon">💬</div>
@@ -41,7 +63,13 @@
 
         <!-- 購入ボタン -->
         <div class="item-detail__purchase">
-          <button class="item-detail__purchase-button">購入手続きへ</button>
+          @if ($item['isSold'])
+            <button class="item-detail__purchase-button" disabled>購入手続きへ</button>
+          @else
+            <a href="{{ route('purchase.purchase', ['item_id' => $item['id']]) }}">
+              <button class="item-detail__purchase-button">購入手続きへ</button>
+            </a>
+          @endif
         </div>
 
         <!-- 商品説明 -->
@@ -84,7 +112,7 @@
               <div class="item-detail__comment">
                 <div class="item-detail__comment-header">
                   <div class="item-detail__comment-avatar"></div>
-                  <span class="item-detail__comment-author"></span>
+                  <span class="item-detail__comment-author">{{ $comment['user']['name'] ?? '匿名ユーザー' }}</span>
                 </div>
                 <div class="item-detail__comment-content">
                   {{ $comment['content'] }}
@@ -96,8 +124,14 @@
           <!-- コメント投稿フォーム -->
           <div class="item-detail__comment-form">
             <h3 class="item-detail__comment-form-title">商品へのコメント</h3>
-            <textarea class="item-detail__comment-input" placeholder="コメントを入力してください"></textarea>
-            <button class="item-detail__comment-submit">コメントを送信する</button>
+            <form action="{{ route('items.comment', ['item_id' => $item['id']]) }}" method="POST">
+              @csrf
+              <textarea name="content" class="item-detail__comment-input" placeholder="コメントを入力してください" required></textarea>
+              @error('content')
+                <div class="error-message">{{ $message }}</div>
+              @enderror
+              <button type="submit" class="item-detail__comment-submit">コメントを送信する</button>
+            </form>
           </div>
         </div>
       </div>
