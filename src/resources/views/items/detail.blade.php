@@ -66,7 +66,7 @@
           @if ($item['isSold'])
             <button class="item-detail__purchase-button" disabled>購入手続きへ</button>
           @else
-            <a href="{{ route('purchase.purchase', ['item_id' => $item['id']]) }}">
+            <a href="{{ route('purchase.procedure', ['item_id' => $item['id']]) }}">
               <button class="item-detail__purchase-button">購入手続きへ</button>
             </a>
           @endif

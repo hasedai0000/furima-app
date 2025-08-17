@@ -24,12 +24,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/mypage/profile', [ProfileController::class, 'store'])->name('mypage.profile.store');
     Route::put('/mypage/profile', [ProfileController::class, 'update'])->name('mypage.profile.update');
 
-    // 商品詳細にコメントを投稿する
+    // 商品関連
     Route::post('/items/{item_id}/comments', [ItemController::class, 'comment'])->name('items.comment');
-    // 商品詳細にいいねをする(マイリストに追加する)
     Route::post('/items/{item_id}/likes', [ItemController::class, 'like'])->name('items.like');
 
-    Route::get('/purchase/{item_id}', [PurchaseController::class, 'purchase'])->name('purchase.purchase');
+    //　購入関連
+    Route::get('/purchase/{item_id}', [PurchaseController::class, 'procedure'])->name('purchase.procedure');
+    Route::get('/purchase/address/{item_id}', [PurchaseController::class, 'editAddress'])->name('purchase.editAddress');
+    Route::put('/purchase/address/{item_id}', [PurchaseController::class, 'modifyAddress'])->name('purchase.modifyAddress');
+    Route::post('/purchase/{item_id}', [PurchaseController::class, 'purchase'])->name('purchase.purchase');
 });
 
 // Item関連ルート

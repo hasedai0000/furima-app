@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domain\Profile\ValueObjects;
+namespace App\Domain\Purchase\ValueObjects;
 
-class ProfilePostCode
+class PurchasePostCode
 {
   private string $value;
 
@@ -42,7 +42,7 @@ class ProfilePostCode
   {
     // ハイフンを除去して数字のみの文字列を作成
     $numericValue = str_replace('-', '', $this->value);
-    
+
     // 7桁の数字をXXX-XXXX形式にフォーマット
     return substr($numericValue, 0, 3) . '-' . substr($numericValue, 3);
   }

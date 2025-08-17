@@ -91,7 +91,7 @@ class Profile
    'id' => $this->id,
    'userId' => $this->userId,
    'imgUrl' => $this->imgUrl ? $this->imgUrl->value() : null,
-   'postcode' => $this->postcode->value(),
+   'postcode' => $this->postcode->formattedValue(),
    'address' => $this->address,
    'buildingName' => $this->buildingName,
   ];
