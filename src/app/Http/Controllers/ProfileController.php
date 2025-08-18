@@ -79,7 +79,7 @@ class ProfileController extends Controller
         $validatedData['buildingName']
       );
 
-      return redirect()->route('item.index')->with('success', 'プロフィールが正常に作成されました。');
+      return redirect()->route('items.index')->with('success', 'プロフィールが正常に作成されました。');
     } catch (\Exception $e) {
       // エラーが発生した場合はエラーメッセージを表示
       return back()->withErrors(['error' => $e->getMessage()]);
@@ -122,7 +122,7 @@ class ProfileController extends Controller
         $validatedData['buildingName']
       );
 
-      return redirect()->route('item.index')->with('success', 'プロフィールが正常に更新されました。');
+      return redirect()->route('items.index')->with('success', 'プロフィールが正常に更新されました。');
     } catch (\Exception $e) {
       // エラーが発生した場合はエラーメッセージを表示
       return back()->withErrors(['error' => $e->getMessage()]);
