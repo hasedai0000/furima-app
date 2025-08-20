@@ -9,6 +9,7 @@ class Item
   private string $id;
   private string $userId;
   private string $name;
+  private string $brandName;
   private string $description;
   private int $price;
   private string $condition;
@@ -22,6 +23,7 @@ class Item
     string $id,
     string $userId,
     string $name,
+    string $brandName,
     string $description,
     int $price,
     string $condition,
@@ -34,6 +36,7 @@ class Item
     $this->id = $id;
     $this->userId = $userId;
     $this->name = $name;
+    $this->brandName = $brandName;
     $this->description = $description;
     $this->price = $price;
     $this->condition = $condition;
@@ -58,6 +61,11 @@ class Item
   public function getName(): string
   {
     return $this->name;
+  }
+
+  public function getBrandName(): string
+  {
+    return $this->brandName;
   }
 
   public function getDescription(): string
@@ -108,6 +116,11 @@ class Item
   public function setName(string $name): void
   {
     $this->name = $name;
+  }
+
+  public function setBrandName(string $brandName): void
+  {
+    $this->brandName = $brandName;
   }
 
   public function setDescription(string $description): void
@@ -161,6 +174,7 @@ class Item
       'id' => $this->id,
       'userId' => $this->userId,
       'name' => $this->name,
+      'brandName' => $this->brandName,
       'description' => $this->description,
       'price' => $this->price,
       'condition' => $this->condition,

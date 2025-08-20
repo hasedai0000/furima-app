@@ -17,7 +17,6 @@ class Lists extends Model
  protected $fillable = [
   'user_id',
   'item_id',
-  'status',
  ];
 
  protected static function boot()
