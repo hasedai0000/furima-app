@@ -16,7 +16,7 @@
       <!-- 商品画像エリア -->
       <div class="item-detail__image-area">
         <div class="item-detail__image-placeholder">
-          <img src="{{ $item['imgUrl'] }}" alt="{{ $item['name'] }}" class="item-detail__img">
+          <img src="{{ asset($item['imgUrl']) }}" alt="{{ $item['name'] }}" class="item-detail__img">
           @if ($item['isSold'])
             <div class="item-detail__sold">
               <span class="sold-label">SOLD</span>
@@ -30,7 +30,7 @@
         <!-- 商品タイトル・価格 -->
         <div class="item-detail__header">
           <h1 class="item-detail__title">{{ $item['name'] }}</h1>
-          <h2 class="item-detail__brand-name">{{ $item['brandName'] }}</h2>
+          <p class="item-detail__brand-name">{{ $item['brandName'] }}</p>
           <div class="item-detail__price">¥{{ number_format($item['price']) }} (税込)</div>
         </div>
 
