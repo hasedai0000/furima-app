@@ -37,7 +37,7 @@
               </form>
             </li>
             <li class="header-nav__item">
-              <a class="header-nav__button--primary" href="/items/create">出品</a>
+              <a class="header-nav__button--primary" href="/sell">出品</a>
             </li>
           @else
             <li class="header-nav__item">

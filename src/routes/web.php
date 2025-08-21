@@ -1,12 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\PurchaseController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +25,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/items/{item_id}/comments', [ItemController::class, 'comment'])->name('items.comment');
     Route::post('/items/{item_id}/likes', [ItemController::class, 'like'])->name('items.like');
 
-    //　購入関連
+    // 出品関連
+    Route::get('/sell', [ItemController::class, 'sell'])->name('items.sell');
+    Route::post('/sell', [ItemController::class, 'store'])->name('items.store');
+
+    //　購入関連    
     Route::get('/purchase/{item_id}', [PurchaseController::class, 'procedure'])->name('purchase.procedure');
     Route::get('/purchase/address/{item_id}', [PurchaseController::class, 'editAddress'])->name('purchase.editAddress');
     Route::put('/purchase/address/{item_id}', [PurchaseController::class, 'modifyAddress'])->name('purchase.modifyAddress');

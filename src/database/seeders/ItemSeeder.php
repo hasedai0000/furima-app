@@ -28,6 +28,7 @@ class ItemSeeder extends Seeder
    [
     'user_id' => $user->id,
     'name' => '腕時計',
+    'brand_name' => 'Rolax',
     'description' => 'スタイリッシュなデザインのメンズ腕時計',
     'price' => 15000,
     'condition' => '良好',
@@ -36,6 +37,7 @@ class ItemSeeder extends Seeder
    [
     'user_id' => $user->id,
     'name' => 'HDD',
+    'brand_name' => '西芝',
     'description' => '高速で信頼性の高いハードディスク',
     'price' => 5000,
     'condition' => '目立った傷や汚れなし',
@@ -44,6 +46,7 @@ class ItemSeeder extends Seeder
    [
     'user_id' => $user->id,
     'name' => '玉ねぎ3束',
+    'brand_name' => 'なし',
     'description' => '新鮮な玉ねぎ3束のセット',
     'price' => 300,
     'condition' => 'やや傷や汚れあり',
@@ -68,6 +71,7 @@ class ItemSeeder extends Seeder
    [
     'user_id' => $user->id,
     'name' => 'マイク',
+    'brand_name' => 'なし',
     'description' => '高音質のレコーディング用マイク',
     'price' => 8000,
     'condition' => '目立った傷や汚れなし',
@@ -84,6 +88,7 @@ class ItemSeeder extends Seeder
    [
     'user_id' => $user->id,
     'name' => 'タンブラー',
+    'brand_name' => 'なし',
     'description' => '使いやすいタンブラー',
     'price' => 500,
     'condition' => '状態が悪い',
@@ -92,6 +97,7 @@ class ItemSeeder extends Seeder
    [
     'user_id' => $user->id,
     'name' => 'コーヒーミル',
+    'brand_name' => 'Starbacks',
     'description' => '手動のコーヒーミル',
     'price' => 4000,
     'condition' => '良好',

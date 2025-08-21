@@ -11,11 +11,10 @@ return new class extends Migration
   */
  public function up(): void
  {
-  Schema::create('lists', function (Blueprint $table) {
+  Schema::create('sells', function (Blueprint $table) {
    $table->uuid('id')->primary();
    $table->uuid('user_id');
    $table->uuid('item_id');
-   $table->string('status');
    $table->timestamps();
 
    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
@@ -28,6 +27,6 @@ return new class extends Migration
   */
  public function down(): void
  {
-  Schema::dropIfExists('lists');
+  Schema::dropIfExists('sells');
  }
 };

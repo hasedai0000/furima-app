@@ -10,4 +10,5 @@ interface ItemRepositoryInterface
   public function findAllExcludingUser(string $userId, string $searchTerm): array;
   public function findMyListItems(string $userId, string $searchTerm): array;
   public function findById(string $id): ?ItemEntity;
+  public function save(ItemEntity $item): void;
 }

@@ -15,6 +15,10 @@ return new class extends Migration
    $table->uuid('id')->primary();
    $table->uuid('user_id');
    $table->uuid('item_id');
+   $table->string('payment_method');
+   $table->string('postcode');
+   $table->string('address');
+   $table->string('building_name');
    $table->timestamp('purchased_at');
    $table->timestamps();
 

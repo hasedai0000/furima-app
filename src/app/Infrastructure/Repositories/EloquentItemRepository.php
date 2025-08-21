@@ -78,6 +78,7 @@ class EloquentItemRepository implements ItemRepositoryInterface
       $eloquentItem->id,
       $eloquentItem->user_id,
       $eloquentItem->name,
+      $eloquentItem->brand_name ?? '',
       $eloquentItem->description,
       (int) $eloquentItem->price,
       $eloquentItem->condition,
@@ -87,5 +88,50 @@ class EloquentItemRepository implements ItemRepositoryInterface
       $eloquentItem->comments->toArray(),
       $eloquentItem->likes->toArray()
     );
+  }
+
+  /**
+   * 商品を作成する
+   *
+   * @param ItemEntity $item
+   * @return ItemEntity
+   */
+  public function save(ItemEntity $item): void
+  {
+    $eloquentItem = Item::where('id', $item->getId())->first();
+
+    if ($eloquentItem) {
+      // 更新処理
+      $eloquentItem->user_id = $item->getUserId();
+      $eloquentItem->name = $item->getName();
+      $eloquentItem->brand_name = $item->getBrandName();
+      $eloquentItem->description = $item->getDescription();
+      $eloquentItem->price = $item->getPrice();
+      $eloquentItem->condition = $item->getCondition();
+      $eloquentItem->img_url = $item->getImgUrl()->value();
+      $eloquentItem->save();
+
+      // カテゴリーの関連付けを更新
+      if (!empty($item->getCategories())) {
+        $eloquentItem->categories()->sync($item->getCategories());
+      }
+    } else {
+      // 新規作成処理
+      $eloquentItem = new Item();
+      $eloquentItem->id = $item->getId();
+      $eloquentItem->user_id = $item->getUserId();
+      $eloquentItem->name = $item->getName();
+      $eloquentItem->brand_name = $item->getBrandName();
+      $eloquentItem->description = $item->getDescription();
+      $eloquentItem->price = $item->getPrice();
+      $eloquentItem->condition = $item->getCondition();
+      $eloquentItem->img_url = $item->getImgUrl()->value();
+      $eloquentItem->save();
+
+      // カテゴリーの関連付けを作成
+      if (!empty($item->getCategories())) {
+        $eloquentItem->categories()->attach($item->getCategories());
+      }
+    }
   }
 }

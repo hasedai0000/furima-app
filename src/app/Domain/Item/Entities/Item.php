@@ -15,9 +15,9 @@ class Item
   private string $condition;
   private ItemImgUrl $imgUrl;
   private bool $isSold;
-  private array $categories = [];
-  private array $comments = [];
-  private array $likes = [];
+  private ?array $categories = [];
+  private ?array $comments = [];
+  private ?array $likes = [];
 
   public function __construct(
     string $id,

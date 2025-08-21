@@ -35,6 +35,10 @@ class PurchaseSeeder extends Seeder
    Purchase::create([
     'user_id' => $buyer->id,
     'item_id' => $itemId,
+    'payment_method' => 'credit_card',
+    'postcode' => '1234567',
+    'address' => '東京都千代田区永田町1-7-1',
+    'building_name' => '永田町ビル101',
     'purchased_at' => now()->subDays(rand(1, 30)), // 過去30日以内のランダムな日付
    ]);
   }
@@ -47,6 +51,10 @@ class PurchaseSeeder extends Seeder
    Purchase::create([
     'user_id' => $buyer->id,
     'item_id' => $item->id,
+    'payment_method' => 'credit_card',
+    'postcode' => '1234567',
+    'address' => '東京都千代田区永田町1-7-1',
+    'building_name' => '永田町ビル101',
     'purchased_at' => now()->subDays(rand(1, 30)),
    ]);
   }

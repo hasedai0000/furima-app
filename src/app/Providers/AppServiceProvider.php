@@ -8,6 +8,8 @@ use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Repositories\EloquentUserRepository;
 use App\Domain\Item\Repositories\ItemRepositoryInterface;
 use App\Infrastructure\Repositories\EloquentItemRepository;
+use App\Domain\Item\Repositories\CategoryRepositoryInterface;
+use App\Infrastructure\Repositories\EloquentCategoryRepository;
 use App\Domain\Item\Repositories\CommentRepositoryInterface;
 use App\Infrastructure\Repositories\EloquentCommentRepository;
 use App\Domain\Item\Repositories\LikeRepositoryInterface;
@@ -29,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ProfileRepositoryInterface::class, EloquentProfileRepository::class);
         $this->app->bind(UserRepositoryInterface::class, EloquentUserRepository::class);
         $this->app->bind(ItemRepositoryInterface::class, EloquentItemRepository::class);
+        $this->app->bind(CategoryRepositoryInterface::class, EloquentCategoryRepository::class);
         $this->app->bind(CommentRepositoryInterface::class, EloquentCommentRepository::class);
         $this->app->bind(LikeRepositoryInterface::class, EloquentLikeRepository::class);
         $this->app->bind(PurchaseRepositoryInterface::class, EloquentPurchaseRepository::class);

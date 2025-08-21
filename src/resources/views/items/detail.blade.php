@@ -30,6 +30,7 @@
         <!-- 商品タイトル・価格 -->
         <div class="item-detail__header">
           <h1 class="item-detail__title">{{ $item['name'] }}</h1>
+          <h2 class="item-detail__brand-name">{{ $item['brandName'] }}</h2>
           <div class="item-detail__price">¥{{ number_format($item['price']) }} (税込)</div>
         </div>
 

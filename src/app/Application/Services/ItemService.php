@@ -5,6 +5,10 @@ namespace App\Application\Services;
 use App\Domain\Item\Repositories\ItemRepositoryInterface;
 use App\Domain\Item\Services\LikeService;
 use Illuminate\Support\Facades\Auth;
+use App\Domain\Item\ValueObjects\ItemImgUrl;
+use App\Domain\Item\ValueObjects\ItemCondition;
+use App\Domain\Item\Entities\Item as ItemEntity;
+use Illuminate\Support\Str;
 
 class ItemService
 {
@@ -38,6 +42,7 @@ class ItemService
       return [
         'id' => $item['id'],
         'name' => $item['name'],
+        'brandName' => $item['brand_name'],
         'description' => $item['description'],
         'price' => $item['price'],
         'condition' => $item['condition'],
@@ -93,5 +98,50 @@ class ItemService
     }
 
     return $itemArray;
+  }
+
+  /**
+   * 商品を出品する
+   *
+   * @param string $userId
+   * @param string $name
+   * @param string $brandName
+   * @param string $description
+   * @param int $price
+   * @param string $condition
+   * @param string $imgUrl
+   * @param array $categoryIds
+   * @return void
+   */
+  public function createItem(
+    string $userId,
+    string $name,
+    string $brandName,
+    string $description,
+    int $price,
+    string $condition,
+    string $imgUrl,
+    array $categoryIds
+  ): ItemEntity {
+    $itemImgUrl = new ItemImgUrl($imgUrl);
+
+    $item = new ItemEntity(
+      Str::uuid()->toString(),
+      $userId,
+      $name,
+      $brandName,
+      $description,
+      $price,
+      $condition,
+      $itemImgUrl,
+      false,
+      $categoryIds,
+      [],
+      []
+    );
+
+    $this->itemRepository->save($item);
+
+    return $item;
   }
 }

@@ -21,6 +21,7 @@ class Item extends Model
   'price',
   'condition',
   'img_url',
+  'is_sold',
  ];
 
  protected static function boot()
@@ -57,10 +58,5 @@ class Item extends Model
  public function purchases()
  {
   return $this->hasMany(Purchase::class);
- }
-
- public function lists()
- {
-  return $this->hasMany(Lists::class);
  }
 }

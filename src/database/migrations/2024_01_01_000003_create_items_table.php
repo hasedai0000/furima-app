@@ -15,7 +15,8 @@ return new class extends Migration
    $table->uuid('id')->primary();
    $table->uuid('user_id');
    $table->string('name');
-   $table->text('description');
+   $table->string('brand_name')->nullable();
+   $table->text('description')->nullable();
    $table->integer('price');
    $table->string('condition');
    $table->string('img_url');

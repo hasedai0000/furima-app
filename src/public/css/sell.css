@@ -1,0 +1,383 @@
+/* 商品出品画面専用スタイル */
+
+/* 認証関連ページ共通スタイル（必要な部分のみ） */
+/* ヘッダー部分 */
+.auth-form__heading {
+    text-align: center;
+    width: 200px;
+    margin: 0 auto;
+    margin-bottom: 30px;
+}
+
+.auth-form__heading-title {
+    font-family: Inter;
+    font-weight: 700;
+    line-height: 100%;
+    text-align: center;
+    font-size: 24px;
+}
+
+/* フォーム全体 */
+.form {
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* フォームグループ */
+.form__group {
+    margin-bottom: 15px;
+}
+
+.form__group-title {
+    text-align: left;
+}
+
+.form__sub-title {
+    color: #5f5f5f;
+    border-bottom: 1px solid #5f5f5f;
+}
+
+.form__label--item {
+    margin-bottom: 5px;
+}
+
+/* エラーメッセージ */
+.form__error {
+    height: 20px;
+    color: #ff0000;
+    text-align: left;
+    font-size: 14px;
+}
+
+/* フォームコンテナの調整 - auth.cssを上書き */
+.auth-form__content {
+    position: absolute !important;
+    width: 600px !important;
+    height: auto !important;
+    min-height: 800px !important;
+    top: 150px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+}
+
+/* 商品画像関連 */
+.item-image__container {
+    width: 100%;
+}
+
+.item-image__preview {
+    width: 100%;
+    height: 200px;
+    border: 1px dashed #5f5f5f;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background-color: #f9f9f9;
+}
+
+.item-image__current {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.item-image__input {
+    display: none;
+}
+
+.item-image__button {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 1px solid #ff5555;
+    color: #ff5555;
+    background-color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.item-image__button:hover {
+    background-color: #ff5555;
+    color: white;
+}
+
+/* カテゴリーセクション */
+.category-section {
+    margin-bottom: 30px;
+}
+
+.category-section__title {
+    font-family: Inter;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.category-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 15px;
+}
+
+.category-button {
+    color: #ff5555;
+    display: inline-block;
+    padding: 8px 16px;
+    border: 2px solid #ff5555;
+    border-radius: 20px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.category-button:hover {
+    border-color: #ff5555;
+    color: #ff5555;
+}
+
+.category-button__input {
+    display: none;
+}
+
+.category-button:has(.category-button__input:checked) {
+    background-color: #ff5555;
+    color: white;
+    border-color: #ff5555;
+}
+
+.category-button:has(.category-button__input:checked) .category-button__text {
+    color: white;
+}
+
+.category-button__text {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* 商品の状態セクション */
+.condition-section {
+    margin-bottom: 30px;
+}
+
+.condition-section__title {
+    font-family: Inter;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.condition-options {
+    width: 100% !important;
+    height: 45px !important;
+    border-radius: 4px !important;
+    border: 1px solid #5f5f5f !important;
+    padding: 0 12px !important;
+    font-size: 16px !important;
+    box-sizing: border-box !important;
+}
+
+.condition-option {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.condition-option:hover {
+    border-color: #007bff;
+    background-color: #f8f9fa;
+}
+
+.condition-option__input {
+    margin-right: 10px;
+}
+
+.condition-option:has(.condition-option__input:checked) {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+.condition-option:has(.condition-option__input:checked)::after {
+    content: "✓";
+    position: absolute;
+    right: 15px;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.condition-option__input:checked + .condition-option__text {
+    color: white;
+    font-weight: 700;
+}
+
+.condition-option__text {
+    font-size: 14px;
+}
+
+/* フォーム入力グループ */
+.form__input-group {
+    margin-bottom: 20px;
+}
+
+.form__input-label {
+    display: block;
+    font-family: Inter;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+/* テキスト入力フィールド - auth.cssを上書き */
+.form__input--text input {
+    width: 100% !important;
+    height: 45px !important;
+    border-radius: 4px !important;
+    border: 1px solid #5f5f5f !important;
+    padding: 0 12px !important;
+    font-size: 16px !important;
+    box-sizing: border-box !important;
+}
+
+/* テキストエリア */
+.form__input--textarea textarea {
+    width: 100%;
+    min-height: 100px;
+    border-radius: 4px;
+    border: 1px solid #5f5f5f;
+    padding: 12px;
+    font-size: 16px;
+    font-family: inherit;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+/* 価格入力 */
+.price-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.price-input__symbol {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+}
+
+.price-input .form__input--text {
+    flex: 1;
+}
+
+.price-input .form__input--text input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ボタンエリア - auth.cssを上書き */
+.form__button {
+    margin: 50px auto !important;
+    text-align: center !important;
+}
+
+.form__button-submit {
+    width: 600px !important;
+    height: 50px !important;
+    border-radius: 5px !important;
+    padding: 10px !important;
+    border: none !important;
+    background: #ff5555 !important;
+    color: #fff !important;
+    cursor: pointer !important;
+    font-family: Inter !important;
+    font-weight: 700 !important;
+    font-size: 18px !important;
+    line-height: 100% !important;
+    text-align: center !important;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .auth-form__content {
+        width: 90% !important;
+        max-width: 500px !important;
+        position: relative !important;
+        top: 50px !important;
+        transform: none !important;
+        left: auto !important;
+        margin: 0 auto !important;
+    }
+
+    .form__button-submit {
+        width: 100% !important;
+        max-width: 500px !important;
+    }
+
+    .item-image__container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .item-image__preview {
+        width: 150px;
+        height: 150px;
+    }
+
+    .category-buttons {
+        gap: 8px;
+    }
+
+    .category-button {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .condition-options {
+        gap: 8px;
+    }
+
+    .condition-option {
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-form__content {
+        width: 95% !important;
+        top: 30px !important;
+    }
+
+    .form__button-submit {
+        width: 100% !important;
+    }
+
+    .item-image__preview {
+        width: 120px;
+        height: 120px;
+    }
+
+    .category-buttons {
+        gap: 6px;
+    }
+
+    .category-button {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
+}

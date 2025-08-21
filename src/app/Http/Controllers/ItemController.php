@@ -7,21 +7,27 @@ use Illuminate\Support\Facades\Auth;
 use App\Application\Services\ItemService;
 use App\Domain\Item\Services\CommentService;
 use App\Domain\Item\Services\LikeService;
+use App\Domain\Item\Services\CategoryService;
+use App\Domain\Item\ValueObjects\ItemCondition;
+use App\Http\Requests\Item\ItemStoreRequest;
 
 class ItemController extends Controller
 {
   private $itemService;
   private $commentService;
   private $likeService;
+  private $categoryService;
 
   public function __construct(
     ItemService $itemService,
     CommentService $commentService,
-    LikeService $likeService
+    LikeService $likeService,
+    CategoryService $categoryService
   ) {
     $this->itemService = $itemService;
     $this->commentService = $commentService;
     $this->likeService = $likeService;
+    $this->categoryService = $categoryService;
   }
 
   public function index(Request $request)
@@ -79,6 +85,46 @@ class ItemController extends Controller
       return redirect()->route('items.detail', ['item_id' => $item_id])->with('success', $message);
     } catch (\Exception $e) {
       return redirect()->route('items.detail', ['item_id' => $item_id])->with('error', $e->getMessage());
+    }
+  }
+
+  public function sell(Request $request)
+  {
+    $categories = $this->categoryService->getCategories();
+    $itemConditions = ItemCondition::getOptions();
+    return view('items.sell', compact('categories', 'itemConditions'));
+  }
+
+  public function store(ItemStoreRequest $request)
+  {
+    try {
+      // バリデーション済みデータの取得
+      $validatedData = $request->validated();
+
+      // 画像ファイルの保存
+      $imgUrl = null;
+      if ($request->hasFile('imgUrl') && $request->file('imgUrl')->isValid()) {
+        $file = $request->file('imgUrl');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $file->storeAs('', $fileName, 'public');
+        $imgUrl = 'storage/' . $fileName;
+      }
+
+      // アプリケーションサービスにロジックを委譲
+      $this->itemService->createItem(
+        auth()->id(),
+        $validatedData['name'],
+        $validatedData['brand_name'],
+        $validatedData['description'],
+        $validatedData['price'],
+        $validatedData['condition'],
+        $imgUrl,
+        $validatedData['category_ids'],
+      );
+
+      return redirect()->route('items.index')->with('success', '商品を出品しました。');
+    } catch (\Exception $e) {
+      return back()->withErrors(['error' => $e->getMessage()]);
     }
   }
 }
