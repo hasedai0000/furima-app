@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
 
 class AuthController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         return view('index');
     }
 
-    public function showVerificationNotice()
+    public function showVerificationNotice(): View
     {
         return view('auth.verify-email');
     }

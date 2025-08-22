@@ -2,25 +2,25 @@
 
 namespace App\Providers;
 
-use App\Domain\Profile\Repositories\ProfileRepositoryInterface;
-use App\Infrastructure\Repositories\EloquentProfileRepository;
-use App\Domain\User\Repositories\UserRepositoryInterface;
-use App\Infrastructure\Repositories\EloquentUserRepository;
-use App\Domain\Item\Repositories\ItemRepositoryInterface;
-use App\Infrastructure\Repositories\EloquentItemRepository;
 use App\Domain\Item\Repositories\CategoryRepositoryInterface;
-use App\Infrastructure\Repositories\EloquentCategoryRepository;
 use App\Domain\Item\Repositories\CommentRepositoryInterface;
-use App\Infrastructure\Repositories\EloquentCommentRepository;
-use App\Domain\Item\Repositories\LikeRepositoryInterface;
-use App\Infrastructure\Repositories\EloquentLikeRepository;
-use App\Domain\Purchase\Repositories\PurchaseRepositoryInterface;
-use App\Infrastructure\Repositories\EloquentPurchaseRepository;
 use App\Domain\Item\Repositories\ItemCategoryRepositoryInterface;
+use App\Domain\Item\Repositories\ItemRepositoryInterface;
+use App\Domain\Item\Repositories\LikeRepositoryInterface;
+use App\Domain\Profile\Repositories\ProfileRepositoryInterface;
+use App\Domain\Purchase\Repositories\PurchaseRepositoryInterface;
+use App\Domain\User\Repositories\UserRepositoryInterface;
+use App\Infrastructure\Repositories\EloquentCategoryRepository;
+use App\Infrastructure\Repositories\EloquentCommentRepository;
 use App\Infrastructure\Repositories\EloquentItemCategoryRepository;
-use Illuminate\Support\ServiceProvider;
+use App\Infrastructure\Repositories\EloquentItemRepository;
+use App\Infrastructure\Repositories\EloquentLikeRepository;
+use App\Infrastructure\Repositories\EloquentProfileRepository;
+use App\Infrastructure\Repositories\EloquentPurchaseRepository;
+use App\Infrastructure\Repositories\EloquentUserRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -52,7 +52,7 @@ class AppServiceProvider extends ServiceProvider
                     $query->sql,
                     [
                         'bindings' => $query->bindings,
-                        'time' => $query->time
+                        'time' => $query->time,
                     ]
                 );
             });

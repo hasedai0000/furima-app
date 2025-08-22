@@ -5,58 +5,61 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Item extends Model
 {
- use HasFactory;
+    use HasFactory;
 
- protected $keyType = 'string';
- public $incrementing = false;
+    protected $keyType = 'string';
+    public $incrementing = false;
 
- protected $fillable = [
-  'user_id',
-  'name',
-  'brand_name',
-  'description',
-  'price',
-  'condition',
-  'img_url',
-  'is_sold',
- ];
+    protected $fillable = [
+        'user_id',
+        'name',
+        'brand_name',
+        'description',
+        'price',
+        'condition',
+        'img_url',
+        'is_sold',
+    ];
 
- protected static function boot()
- {
-  parent::boot();
+    protected static function boot()
+    {
+        parent::boot();
 
-  static::creating(function ($model) {
-   if (empty($model->id)) {
-    $model->id = Str::uuid();
-   }
-  });
- }
+        static::creating(function ($model) {
+            if (empty($model->id)) {
+                $model->id = Str::uuid();
+            }
+        });
+    }
 
- public function user()
- {
-  return $this->belongsTo(User::class);
- }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
- public function categories()
- {
-  return $this->belongsToMany(Category::class, 'item_categories');
- }
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'item_categories');
+    }
 
- public function likes()
- {
-  return $this->hasMany(Like::class);
- }
+    public function likes(): HasMany
+    {
+        return $this->hasMany(Like::class);
+    }
 
- public function comments()
- {
-  return $this->hasMany(Comment::class);
- }
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
 
- public function purchases()
- {
-  return $this->hasMany(Purchase::class);
- }
+    public function purchases(): HasMany
+    {
+        return $this->hasMany(Purchase::class);
+    }
 }

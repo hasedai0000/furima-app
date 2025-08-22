@@ -9,39 +9,39 @@ use Laravel\Fortify\Contracts\ResetsUserPasswords;
 
 class ResetUserPasswordService implements ResetsUserPasswords
 {
- /**
-  * ユーザーのパスワードをリセットする
-  *
-  * @param array<string, string> $input
-  */
- public function reset(User $user, array $input): void
- {
-  $this->validate($input);
+    /**
+     * ユーザーのパスワードをリセットする
+     *
+     * @param array<string, string> $input
+     */
+    public function reset(User $user, array $input): void
+    {
+        $this->validate($input);
 
-  $user->forceFill([
-   'password' => Hash::make($input['password']),
-  ])->save();
- }
+        $user->forceFill([
+         'password' => Hash::make($input['password']),
+        ])->save();
+    }
 
- /**
-  * 入力データを検証する
-  *
-  * @param array<string, string> $input
-  */
- private function validate(array $input): void
- {
-  Validator::make($input, [
-   'password' => $this->passwordRules(),
-  ])->validate();
- }
+    /**
+     * 入力データを検証する
+     *
+     * @param array<string, string> $input
+     */
+    private function validate(array $input): void
+    {
+        Validator::make($input, [
+         'password' => $this->passwordRules(),
+        ])->validate();
+    }
 
- /**
-  * パスワードの検証ルールを取得する
-  *
-  * @return array<int, \Illuminate\Contracts\Validation\Rule|array|string>
-  */
- private function passwordRules(): array
- {
-  return ['required', 'string', \Illuminate\Validation\Rules\Password::default(), 'confirmed'];
- }
+    /**
+     * パスワードの検証ルールを取得する
+     *
+     * @return array<int, \Illuminate\Contracts\Validation\Rule|array|string>
+     */
+    private function passwordRules(): array
+    {
+        return ['required', 'string', \Illuminate\Validation\Rules\Password::default(), 'confirmed'];
+    }
 }

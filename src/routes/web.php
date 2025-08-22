@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +29,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/sell', [ItemController::class, 'sell'])->name('items.sell');
     Route::post('/sell', [ItemController::class, 'store'])->name('items.store');
 
-    //　購入関連    
+    //　購入関連
     Route::get('/purchase/{item_id}', [PurchaseController::class, 'procedure'])->name('purchase.procedure');
     Route::get('/purchase/address/{item_id}', [PurchaseController::class, 'editAddress'])->name('purchase.editAddress');
     Route::put('/purchase/address/{item_id}', [PurchaseController::class, 'modifyAddress'])->name('purchase.modifyAddress');

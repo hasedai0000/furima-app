@@ -2,15 +2,14 @@
 
 namespace App\Providers;
 
+use App\Domain\Profile\Services\UpdateProfileInformationService;
 use App\Domain\User\Services\CreateUserService;
 use App\Domain\User\Services\ResetUserPasswordService;
 use App\Domain\User\Services\UpdateUserPasswordService;
-use App\Domain\Profile\Services\UpdateProfileInformationService;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
