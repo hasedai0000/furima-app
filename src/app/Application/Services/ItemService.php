@@ -6,21 +6,25 @@ use App\Domain\Item\Repositories\ItemRepositoryInterface;
 use App\Domain\Item\Services\LikeService;
 use Illuminate\Support\Facades\Auth;
 use App\Domain\Item\ValueObjects\ItemImgUrl;
-use App\Domain\Item\ValueObjects\ItemCondition;
 use App\Domain\Item\Entities\Item as ItemEntity;
+use App\Domain\Item\Repositories\ItemCategoryRepositoryInterface;
+use App\Domain\Item\ValueObjects\ItemCondition;
 use Illuminate\Support\Str;
 
 class ItemService
 {
   private $itemRepository;
   private $likeService;
+  private $itemCategoryRepository;
 
   public function __construct(
     ItemRepositoryInterface $itemRepository,
-    LikeService $likeService
+    LikeService $likeService,
+    ItemCategoryRepositoryInterface $itemCategoryRepository
   ) {
     $this->itemRepository = $itemRepository;
     $this->likeService = $likeService;
+    $this->itemCategoryRepository = $itemCategoryRepository;
   }
 
   /**
@@ -111,7 +115,7 @@ class ItemService
    * @param string $condition
    * @param string $imgUrl
    * @param array $categoryIds
-   * @return void
+   * @return ItemEntity
    */
   public function createItem(
     string $userId,
@@ -141,6 +145,11 @@ class ItemService
     );
 
     $this->itemRepository->save($item);
+
+    // カテゴリーの関連付けを作成
+    if (!empty($categoryIds)) {
+      $this->itemCategoryRepository->attachCategories($item->getId(), $categoryIds);
+    }
 
     return $item;
   }

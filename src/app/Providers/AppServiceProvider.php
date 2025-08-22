@@ -16,6 +16,8 @@ use App\Domain\Item\Repositories\LikeRepositoryInterface;
 use App\Infrastructure\Repositories\EloquentLikeRepository;
 use App\Domain\Purchase\Repositories\PurchaseRepositoryInterface;
 use App\Infrastructure\Repositories\EloquentPurchaseRepository;
+use App\Domain\Item\Repositories\ItemCategoryRepositoryInterface;
+use App\Infrastructure\Repositories\EloquentItemCategoryRepository;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -35,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CommentRepositoryInterface::class, EloquentCommentRepository::class);
         $this->app->bind(LikeRepositoryInterface::class, EloquentLikeRepository::class);
         $this->app->bind(PurchaseRepositoryInterface::class, EloquentPurchaseRepository::class);
+        $this->app->bind(ItemCategoryRepositoryInterface::class, EloquentItemCategoryRepository::class);
     }
 
     /**

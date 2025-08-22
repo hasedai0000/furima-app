@@ -5,6 +5,7 @@ namespace App\Infrastructure\Repositories;
 use App\Domain\Item\Entities\Item as ItemEntity;
 use App\Domain\Item\Repositories\ItemRepositoryInterface;
 use App\Domain\Item\ValueObjects\ItemImgUrl;
+use App\Domain\Item\ValueObjects\ItemCondition;
 use App\Models\Item;
 
 class EloquentItemRepository implements ItemRepositoryInterface
@@ -81,7 +82,7 @@ class EloquentItemRepository implements ItemRepositoryInterface
       $eloquentItem->brand_name ?? '',
       $eloquentItem->description,
       (int) $eloquentItem->price,
-      $eloquentItem->condition,
+      ItemCondition::LABELS[$eloquentItem->condition],
       new ItemImgUrl($eloquentItem->img_url),
       $eloquentItem->purchases->toArray() ? true : false,
       $eloquentItem->categories->toArray(),
@@ -110,11 +111,6 @@ class EloquentItemRepository implements ItemRepositoryInterface
       $eloquentItem->condition = $item->getCondition();
       $eloquentItem->img_url = $item->getImgUrl()->value();
       $eloquentItem->save();
-
-      // カテゴリーの関連付けを更新
-      if (!empty($item->getCategories())) {
-        $eloquentItem->categories()->sync($item->getCategories());
-      }
     } else {
       // 新規作成処理
       $eloquentItem = new Item();
@@ -127,11 +123,6 @@ class EloquentItemRepository implements ItemRepositoryInterface
       $eloquentItem->condition = $item->getCondition();
       $eloquentItem->img_url = $item->getImgUrl()->value();
       $eloquentItem->save();
-
-      // カテゴリーの関連付けを作成
-      if (!empty($item->getCategories())) {
-        $eloquentItem->categories()->attach($item->getCategories());
-      }
     }
   }
 }
