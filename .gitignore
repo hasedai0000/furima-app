@@ -1,3 +1,6 @@
+# cursor関連
+.cursor/*
+
 # Docker関連
 docker/mysql/data/
 docker/mysql/data/*

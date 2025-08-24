@@ -19,10 +19,10 @@ class EloquentItemRepository implements ItemRepositoryInterface
     public function findAll(string $searchTerm): array
     {
         return Item::with('purchases')
-          ->where('name', 'LIKE', '%' . $searchTerm . '%')
-          ->orderBy('created_at', 'desc')
-          ->get()
-          ->toArray();
+            ->where('name', 'LIKE', '%' . $searchTerm . '%')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->toArray();
     }
 
     /**
@@ -35,11 +35,11 @@ class EloquentItemRepository implements ItemRepositoryInterface
     public function findAllExcludingUser(string $userId, string $searchTerm): array
     {
         return Item::with('purchases')
-          ->where('name', 'LIKE', '%' . $searchTerm . '%')
-          ->where('user_id', '!=', $userId)
-          ->orderBy('created_at', 'desc')
-          ->get()
-          ->toArray();
+            ->where('name', 'LIKE', '%' . $searchTerm . '%')
+            ->where('user_id', '!=', $userId)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->toArray();
     }
 
     /**
@@ -52,13 +52,49 @@ class EloquentItemRepository implements ItemRepositoryInterface
     public function findMyListItems(string $userId, string $searchTerm): array
     {
         return Item::with('purchases')
-          ->whereHas('likes', function ($query) use ($userId) {
-              $query->where('user_id', $userId);
-          })
-          ->where('name', 'LIKE', '%' . $searchTerm . '%')
-          ->orderBy('created_at', 'desc')
-          ->get()
-          ->toArray();
+            ->whereHas('likes', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->where('name', 'LIKE', '%' . $searchTerm . '%')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->toArray();
+    }
+
+    /**
+     * 自分が出品した商品を取得
+     *
+     * @param string $userId
+     * @param string $searchTerm
+     * @return array
+     */
+    public function findMySellItems(string $userId, string $searchTerm): array
+    {
+        return Item::with('purchases')
+            ->where('user_id', '=', $userId)
+            ->where('name', 'LIKE', '%' . $searchTerm . '%')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->toArray();
+    }
+
+    /**
+     * 自分が購入した商品を取得
+     *
+     * @param string $userId
+     * @param string $searchTerm
+     * @return array
+     */
+    public function findMyBuyItems(string $userId, string $searchTerm): array
+    {
+        return Item::with('purchases')
+            ->whereHas('purchases', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->where('name', 'LIKE', '%' . $searchTerm . '%')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->toArray();
     }
 
     /**
@@ -75,6 +111,9 @@ class EloquentItemRepository implements ItemRepositoryInterface
             return null;
         }
 
+        // conditionの値を適切に処理する
+        $conditionLabel = $this->getConditionLabel($eloquentItem->condition);
+
         return new ItemEntity(
             $eloquentItem->id,
             $eloquentItem->user_id,
@@ -82,13 +121,35 @@ class EloquentItemRepository implements ItemRepositoryInterface
             $eloquentItem->brand_name ?? '',
             $eloquentItem->description,
             (int) $eloquentItem->price,
-            ItemCondition::LABELS[$eloquentItem->condition],
+            $conditionLabel,
             new ItemImgUrl($eloquentItem->img_url),
             $eloquentItem->purchases->toArray() ? true : false,
             $eloquentItem->categories->toArray(),
             $eloquentItem->comments->toArray(),
             $eloquentItem->likes->toArray()
         );
+    }
+
+    /**
+     * 商品の状態を適切なラベルに変換する
+     *
+     * @param string $condition
+     * @return string
+     */
+    private function getConditionLabel(string $condition): string
+    {
+        // まず英語のキーとして存在するかチェック
+        if (array_key_exists($condition, ItemCondition::LABELS)) {
+            return ItemCondition::LABELS[$condition];
+        }
+
+        // 日本語のラベルとして存在するかチェック
+        if (in_array($condition, ItemCondition::LABELS, true)) {
+            return $condition;
+        }
+
+        // どちらでもない場合は空文字を返す
+        return '';
     }
 
     /**

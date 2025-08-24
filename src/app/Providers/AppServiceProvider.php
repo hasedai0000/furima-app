@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Application\Contracts\FileUploadServiceInterface;
+use App\Application\Services\FileUploadService;
 use App\Domain\Item\Repositories\CategoryRepositoryInterface;
 use App\Domain\Item\Repositories\CommentRepositoryInterface;
 use App\Domain\Item\Repositories\ItemCategoryRepositoryInterface;
@@ -29,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // ProfileRepositoryInterfaceの実装クラスを登録
+        // RepositoryInterfaceの実装クラスを登録
         $this->app->bind(ProfileRepositoryInterface::class, EloquentProfileRepository::class);
         $this->app->bind(UserRepositoryInterface::class, EloquentUserRepository::class);
         $this->app->bind(ItemRepositoryInterface::class, EloquentItemRepository::class);
@@ -38,6 +40,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(LikeRepositoryInterface::class, EloquentLikeRepository::class);
         $this->app->bind(PurchaseRepositoryInterface::class, EloquentPurchaseRepository::class);
         $this->app->bind(ItemCategoryRepositoryInterface::class, EloquentItemCategoryRepository::class);
+        
+        // ServiceInterfaceの実装クラスを登録
+        $this->app->bind(FileUploadServiceInterface::class, FileUploadService::class);
     }
 
     /**

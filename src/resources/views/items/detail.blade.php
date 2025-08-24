@@ -127,7 +127,7 @@
             <h3 class="item-detail__comment-form-title">商品へのコメント</h3>
             <form action="{{ route('items.comment', ['item_id' => $item['id']]) }}" method="POST">
               @csrf
-              <textarea name="content" class="item-detail__comment-input" placeholder="コメントを入力してください" required></textarea>
+              <textarea name="content" class="item-detail__comment-input" placeholder="コメントを入力してください"></textarea>
               @error('content')
                 <div class="error-message">{{ $message }}</div>
               @enderror

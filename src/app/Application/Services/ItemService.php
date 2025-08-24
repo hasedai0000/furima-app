@@ -2,28 +2,32 @@
 
 namespace App\Application\Services;
 
+use App\Application\Services\AuthenticationService;
+use App\Application\Transformers\ItemTransformer;
 use App\Domain\Item\Entities\Item as ItemEntity;
 use App\Domain\Item\Repositories\ItemCategoryRepositoryInterface;
 use App\Domain\Item\Repositories\ItemRepositoryInterface;
 use App\Domain\Item\Services\LikeService;
 use App\Domain\Item\ValueObjects\ItemImgUrl;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class ItemService
 {
   private ItemRepositoryInterface $itemRepository;
-  private LikeService $likeService;
   private ItemCategoryRepositoryInterface $itemCategoryRepository;
+  private AuthenticationService $authService;
+  private LikeService $likeService;
 
   public function __construct(
     ItemRepositoryInterface $itemRepository,
-    LikeService $likeService,
-    ItemCategoryRepositoryInterface $itemCategoryRepository
+    ItemCategoryRepositoryInterface $itemCategoryRepository,
+    AuthenticationService $authService,
+    LikeService $likeService
   ) {
     $this->itemRepository = $itemRepository;
-    $this->likeService = $likeService;
     $this->itemCategoryRepository = $itemCategoryRepository;
+    $this->authService = $authService;
+    $this->likeService = $likeService;
   }
 
   /**
@@ -34,27 +38,14 @@ class ItemService
   public function getItems(string $searchTerm): array
   {
     // ログインユーザーがいる場合は、そのユーザーが出品した商品を除外
-    if (Auth::check()) {
-      $items = $this->itemRepository->findAllExcludingUser(Auth::id(), $searchTerm);
+    if ($this->authService->isAuthenticated()) {
+      $items = $this->itemRepository->findAllExcludingUser($this->authService->getCurrentUserId(), $searchTerm);
     } else {
       // 未ログインの場合は全ての商品を取得
       $items = $this->itemRepository->findAll($searchTerm);
     }
 
-    $items = array_map(function ($item) {
-      return [
-        'id' => $item['id'],
-        'name' => $item['name'],
-        'brandName' => $item['brand_name'],
-        'description' => $item['description'],
-        'price' => $item['price'],
-        'condition' => $item['condition'],
-        'imgUrl' => $item['img_url'],
-        'isSold' => isset($item['purchases']) && count($item['purchases']) > 0,
-      ];
-    }, $items);
-
-    return $items;
+    return ItemTransformer::transformItems($items);
   }
 
   /**
@@ -65,21 +56,38 @@ class ItemService
    */
   public function getMyListItems(string $searchTerm): array
   {
-    $items = $this->itemRepository->findMyListItems(Auth::id(), $searchTerm);
+    $userId = $this->authService->requireAuthentication();
+    $items = $this->itemRepository->findMyListItems($userId, $searchTerm);
 
-    $items = array_map(function ($item) {
-      return [
-        'id' => $item['id'],
-        'name' => $item['name'],
-        'description' => $item['description'],
-        'price' => $item['price'],
-        'condition' => $item['condition'],
-        'imgUrl' => $item['img_url'],
-        'isSold' => isset($item['purchases']) && count($item['purchases']) > 0,
-      ];
-    }, $items);
+    return ItemTransformer::transformItems($items);
+  }
 
-    return $items;
+  /**
+   * 自分が出品した商品を取得
+   *
+   * @param string $searchTerm
+   * @return array
+   */
+  public function getMySellItems(string $searchTerm): array
+  {
+    $userId = $this->authService->requireAuthentication();
+    $items = $this->itemRepository->findMySellItems($userId, $searchTerm);
+
+    return ItemTransformer::transformItems($items);
+  }
+
+  /**
+   * 自分が購入した商品を取得
+   *
+   * @param string $searchTerm
+   * @return array
+   */
+  public function getMyBuyItems(string $searchTerm): array
+  {
+    $userId = $this->authService->requireAuthentication();
+    $items = $this->itemRepository->findMyBuyItems($userId, $searchTerm);
+
+    return ItemTransformer::transformItems($items);
   }
 
   /**
@@ -91,10 +99,22 @@ class ItemService
   public function getItem(string $id): array
   {
     $item = $this->itemRepository->findById($id);
+    return $item->toArray();
+  }
+
+  /**
+   * 商品詳細を取得（いいね状態を含む）
+   *
+   * @param string $id
+   * @return array
+   */
+  public function getItemWithLikeStatus(string $id): array
+  {
+    $item = $this->itemRepository->findById($id);
     $itemArray = $item->toArray();
 
     // ログインユーザーがいいねしているかどうかを追加
-    if (Auth::check()) {
+    if ($this->authService->isAuthenticated()) {
       $itemArray['isLiked'] = $this->likeService->isLiked($id);
     } else {
       $itemArray['isLiked'] = false;

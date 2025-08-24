@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Application\Contracts\FileUploadServiceInterface;
+use App\Application\Services\AuthenticationService;
 use App\Application\Services\ItemService;
 use App\Domain\Item\Services\CategoryService;
 use App\Domain\Item\Services\CommentService;
 use App\Domain\Item\Services\LikeService;
 use App\Domain\Item\ValueObjects\ItemCondition;
+use App\Http\Requests\Item\ItemCommentRequest;
 use App\Http\Requests\Item\ItemStoreRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 
@@ -20,17 +22,23 @@ class ItemController extends Controller
     private CommentService $commentService;
     private LikeService $likeService;
     private CategoryService $categoryService;
+    private FileUploadServiceInterface $fileUploadService;
+    private AuthenticationService $authService;
 
     public function __construct(
         ItemService $itemService,
         CommentService $commentService,
         LikeService $likeService,
-        CategoryService $categoryService
+        CategoryService $categoryService,
+        FileUploadServiceInterface $fileUploadService,
+        AuthenticationService $authService
     ) {
         $this->itemService = $itemService;
         $this->commentService = $commentService;
         $this->likeService = $likeService;
         $this->categoryService = $categoryService;
+        $this->fileUploadService = $fileUploadService;
+        $this->authService = $authService;
     }
 
     public function index(Request $request): mixed
@@ -40,8 +48,8 @@ class ItemController extends Controller
 
         // クエリパラメータでtab=mylistの場合はマイリストを表示
         if ($request->query('tab') === 'mylist') {
-            // 認証チェックz
-            if (! Auth::check()) {
+            // 認証チェック
+            if (! $this->authService->isAuthenticated()) {
                 return redirect()->route('login');
             }
             $items = $this->itemService->getMyListItems($searchTerm);
@@ -54,17 +62,18 @@ class ItemController extends Controller
 
     public function detail(string $id): View
     {
-        $item = $this->itemService->getItem($id);
+        $item = $this->itemService->getItemWithLikeStatus($id);
 
         return view('items.detail', compact('item'));
     }
 
-    public function comment(Request $request, string $item_id): RedirectResponse
+    public function comment(ItemCommentRequest $request, string $item_id): RedirectResponse
     {
         try {
+            $validatedData = $request->validated();
             // アプリケーションサービスにロジックを委譲
             $this->commentService->post(
-                $request->input('content'),
+                $validatedData['content'],
                 $item_id
             );
 
@@ -92,7 +101,7 @@ class ItemController extends Controller
         }
     }
 
-    public function sell(Request $request): \Illuminate\Contracts\View\View
+    public function sell(Request $request): View
     {
         $categories = $this->categoryService->getCategories();
         $itemConditions = ItemCondition::getOptions();
@@ -106,13 +115,10 @@ class ItemController extends Controller
             // バリデーション済みデータの取得
             $validatedData = $request->validated();
 
-            // 画像ファイルの保存
-            $imgUrl = null;
             if ($request->hasFile('imgUrl') && $request->file('imgUrl')->isValid()) {
-                $file = $request->file('imgUrl');
-                $fileName = time() . '_' . $file->getClientOriginalName();
-                $file->storeAs('', $fileName, 'public');
-                $imgUrl = 'storage/' . $fileName;
+                $imgUrl = $this->fileUploadService->upload($request->file('imgUrl'));
+            } else {
+                $imgUrl = null;
             }
 
             // アプリケーションサービスにロジックを委譲

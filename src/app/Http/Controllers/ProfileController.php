@@ -2,23 +2,55 @@
 
 namespace App\Http\Controllers;
 
+use App\Application\Services\AuthenticationService;
+use App\Application\Services\FileUploadService;
+use App\Application\Services\ItemService;
 use App\Application\Services\ProfileService;
 use App\Application\Services\UserService;
+use App\Http\Requests\Profile\AddressUpdateRequest;
 use App\Http\Requests\Profile\ProfileStoreRequest;
 use App\Http\Requests\Profile\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
     private ProfileService $profileService;
+    private ItemService $itemService;
     private UserService $userService;
+    private FileUploadService $fileUploadService;
+    private AuthenticationService $authService;
 
     public function __construct(
+        AuthenticationService $authService,
+        ItemService $itemService,
         ProfileService $profileService,
-        UserService $userService
+        UserService $userService,
+        FileUploadService $fileUploadService
     ) {
+        $this->authService = $authService;
+        $this->itemService = $itemService;
         $this->profileService = $profileService;
         $this->userService = $userService;
+        $this->fileUploadService = $fileUploadService;
+    }
+
+    public function index(Request $request): mixed
+    {
+        // 検索パラメータがある場合は検索を実行
+        $searchTerm = $request->filled('search') ? $request->input('search') : '';
+
+        if (!$this->authService->isAuthenticated()) {
+            return redirect()->route('login');
+        }
+        // クエリパラメータでpage=buyの場合はマイリストを表示
+        if ($request->query('page') === 'sell') {
+            $items = $this->itemService->getMySellItems($searchTerm);
+        } else {
+            $items = $this->itemService->getMyBuyItems($searchTerm);
+        }
+
+        return view('mypage.index', compact('items', 'searchTerm'));
     }
 
     /**
@@ -62,12 +94,10 @@ class ProfileController extends Controller
             );
 
             // 画像ファイルの処理
-            $imgUrl = null;
             if ($request->hasFile('imgUrl') && $request->file('imgUrl')->isValid()) {
-                $file = $request->file('imgUrl');
-                $fileName = time() . '_' . $file->getClientOriginalName();
-                $file->storeAs('', $fileName, 'public');
-                $imgUrl = 'storage/' . $fileName;
+                $imgUrl = $this->fileUploadService->upload($request->file('imgUrl'));
+            } else {
+                $imgUrl = null;
             }
 
             // アプリケーションサービスにロジックを委譲
@@ -105,12 +135,10 @@ class ProfileController extends Controller
             );
 
             // 画像ファイルの処理
-            $imgUrl = null;
             if ($request->hasFile('imgUrl') && $request->file('imgUrl')->isValid()) {
-                $file = $request->file('imgUrl');
-                $fileName = time() . '_' . $file->getClientOriginalName();
-                $file->storeAs('', $fileName, 'public');
-                $imgUrl = 'storage/' . $fileName;
+                $imgUrl = $this->fileUploadService->upload($request->file('imgUrl'));
+            } else {
+                $imgUrl = null;
             }
 
             // アプリケーションサービスにロジックを委譲
@@ -126,6 +154,25 @@ class ProfileController extends Controller
         } catch (\Exception $e) {
             // エラーが発生した場合はエラーメッセージを表示
             return back()->withErrors(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function modifyAddress(AddressUpdateRequest $request, string $itemId): RedirectResponse
+    {
+        try {
+            $validatedData = $request->validated();
+
+            $this->profileService->updateProfile(
+                auth()->id(),
+                null,
+                $validatedData['postcode'],
+                $validatedData['address'],
+                $validatedData['buildingName']
+            );
+
+            return redirect()->route('purchase.procedure', $itemId)->with('success', '住所を更新しました');
+        } catch (\Exception $e) {
+            return redirect()->route('purchase.address', $itemId)->with('error', $e->getMessage());
         }
     }
 }

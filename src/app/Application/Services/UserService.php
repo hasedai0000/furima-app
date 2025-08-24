@@ -33,21 +33,25 @@ class UserService
      */
     public function updateUserName(string $userId, string $name): UserEntity
     {
-        $user = $this->getUser($userId);
+        try {
+            $user = $this->getUser($userId);
 
-        if (! $user) {
-            throw new \Exception('ユーザーが見つかりません。');
+            if (! $user) {
+                throw new \Exception('ユーザーが見つかりません。');
+            }
+
+            $user = new UserEntity(
+                $user->getId(),
+                $name,
+                $user->getEmail(),
+                $user->getPassword()
+            );
+
+            $this->userRepository->save($user);
+
+            return $user;
+        } catch (\Exception $e) {
+            throw new \Exception('ユーザー名の更新に失敗しました。');
         }
-
-        $user = new UserEntity(
-            $user->getId(),
-            $name,
-            $user->getEmail(),
-            $user->getPassword()
-        );
-
-        $this->userRepository->save($user);
-
-        return $user;
     }
 }

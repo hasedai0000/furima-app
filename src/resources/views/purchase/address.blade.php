@@ -15,7 +15,7 @@
     <div class="profile-form__heading">
       <h2 class="auth-form__heading-title">配送先住所の変更</h2>
     </div>
-    <form class="form" action="{{ route('purchase.modifyAddress', ['item_id' => $itemId]) }}" method="post"
+    <form class="form" action="{{ route('profile.modifyAddress', ['item_id' => $itemId]) }}" method="post"
       enctype="multipart/form-data">
       @method('PUT')
       @csrf

@@ -28,7 +28,7 @@
         <ul class="header-nav">
           @if (Auth::check() && Auth::user()->hasVerifiedEmail())
             <li class="header-nav__item">
-              <a class="header-nav__link" href="/mypage/profile">マイページ</a>
+              <a class="header-nav__link" href="/mypage?page=sell">マイページ</a>
             </li>
             <li class="header-nav__item">
               <form class="form" action="/logout" method="post">

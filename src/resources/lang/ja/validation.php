@@ -134,7 +134,7 @@ return [
             'rule-name' => 'custom-message',
         ],
         'password' => [
-            'confirmed' => '確認用パスワードと一致しません。',
+            'confirmed' => 'パスワードと一致しません。',
         ],
     ],
 

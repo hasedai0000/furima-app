@@ -17,9 +17,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    // プロフィール関連
+    Route::get('/mypage', [ProfileController::class, 'index'])->name('mypage.index');
     Route::get('/mypage/profile', [ProfileController::class, 'show'])->name('mypage.profile.show');
     Route::post('/mypage/profile', [ProfileController::class, 'store'])->name('mypage.profile.store');
     Route::put('/mypage/profile', [ProfileController::class, 'update'])->name('mypage.profile.update');
+    Route::put('/purchase/address/{item_id}', [ProfileController::class, 'modifyAddress'])->name('profile.modifyAddress');
 
     // 商品関連
     Route::post('/items/{item_id}/comments', [ItemController::class, 'comment'])->name('items.comment');
@@ -32,7 +35,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //　購入関連
     Route::get('/purchase/{item_id}', [PurchaseController::class, 'procedure'])->name('purchase.procedure');
     Route::get('/purchase/address/{item_id}', [PurchaseController::class, 'editAddress'])->name('purchase.editAddress');
-    Route::put('/purchase/address/{item_id}', [PurchaseController::class, 'modifyAddress'])->name('purchase.modifyAddress');
     Route::post('/purchase/{item_id}', [PurchaseController::class, 'purchase'])->name('purchase.purchase');
 });
 
