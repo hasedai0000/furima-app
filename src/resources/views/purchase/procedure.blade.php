@@ -132,7 +132,7 @@
       }
 
       // Stripe決済の場合はCheckoutページに遷移
-      if (paymentMethod === 'stripe') {
+      if (paymentMethod === 'credit_card') {
         this.disabled = true;
         this.textContent = 'Stripe決済ページに移動中...';
         window.location.href = '{{ route('purchase.stripe-checkout', ['item_id' => $item['id']]) }}';

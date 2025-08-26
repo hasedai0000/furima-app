@@ -24,7 +24,6 @@ class Item extends Model
         'price',
         'condition',
         'img_url',
-        'is_sold',
     ];
 
     protected static function boot()

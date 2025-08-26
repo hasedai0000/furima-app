@@ -102,7 +102,7 @@ class PurchaseController extends Controller
 
             $this->purchaseService->completePurchase(
                 $itemId,
-                PaymentMethod::STRIPE,
+                PaymentMethod::CREDIT_CARD,
                 $profile['postcode'],
                 $profile['address'],
                 $profile['buildingName']

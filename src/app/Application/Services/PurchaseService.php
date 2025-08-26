@@ -117,7 +117,7 @@ class PurchaseService
         $item = $this->itemService->getItem($itemId);
 
         // Stripe決済の場合は決済処理を実行
-        if ($paymentMethod === PaymentMethod::STRIPE) {
+        if ($paymentMethod === PaymentMethod::CREDIT_CARD) {
             $this->processStripePayment($item['price'], $paymentMethodId);
         }
 

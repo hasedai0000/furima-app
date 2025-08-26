@@ -46,8 +46,11 @@ class ItemController extends Controller
         // 検索パラメータがある場合は検索を実行
         $searchTerm = $request->filled('search') ? $request->input('search') : '';
 
+        // 現在のタブを取得
+        $currentTab = $request->query('tab', '');
+
         // クエリパラメータでtab=mylistの場合はマイリストを表示
-        if ($request->query('tab') === 'mylist') {
+        if ($currentTab === 'mylist') {
             // 認証チェック
             if (! $this->authService->isAuthenticated()) {
                 return redirect()->route('login');
@@ -57,7 +60,7 @@ class ItemController extends Controller
             $items = $this->itemService->getItems($searchTerm);
         }
 
-        return view('items.index', compact('items', 'searchTerm'));
+        return view('items.index', compact('items', 'searchTerm', 'currentTab'));
     }
 
     public function detail(string $id): View
@@ -118,7 +121,7 @@ class ItemController extends Controller
             if ($request->hasFile('imgUrl') && $request->file('imgUrl')->isValid()) {
                 $imgUrl = $this->fileUploadService->upload($request->file('imgUrl'));
             } else {
-                $imgUrl = null;
+                $imgUrl = '';
             }
 
             // アプリケーションサービスにロジックを委譲

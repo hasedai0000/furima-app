@@ -9,7 +9,6 @@
     @if (Auth::check() && Auth::user()->hasVerifiedEmail())
       <div class="items__tabs">
         @php
-          $currentTab = request('tab', '');
           $searchParams = $searchTerm ? ['search' => $searchTerm] : [];
         @endphp
 

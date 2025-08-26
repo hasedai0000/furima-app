@@ -42,22 +42,22 @@
                 @csrf
                 <button type="submit" class="item-detail__like-button">
                   @if (isset($item['isLiked']) && $item['isLiked'])
-                    <div class="item-detail__metric-icon liked">★</div>
+                    <div class="item-detail__metric-icon liked"><i class="fas fa-star"></i></div>
                   @else
-                    <div class="item-detail__metric-icon">★</div>
+                    <div class="item-detail__metric-icon"><i class="far fa-star"></i></div>
                   @endif
                   <span class="item-detail__metric-count">{{ count($item['likes']) }}</span>
                 </button>
               </form>
             @else
               <a href="{{ route('login') }}" class="item-detail__like-button">
-                <div class="item-detail__metric-icon">★</div>
+                <div class="item-detail__metric-icon"><i class="far fa-heart"></i></div>
                 <span class="item-detail__metric-count">{{ count($item['likes']) }}</span>
               </a>
             @endauth
           </div>
           <div class="item-detail__metric">
-            <div class="item-detail__metric-icon">💬</div>
+            <div class="item-detail__metric-icon"><i class="fas fa-comment"></i></div>
             <span class="item-detail__metric-count">{{ count($item['comments']) }}</span>
           </div>
         </div>
