@@ -20,86 +20,80 @@
   @endif
 
   <div class="purchase">
-    <form action="{{ route('purchase.purchase', ['item_id' => $item['id']]) }}" method="post">
-      @csrf
-      @if ($profile)
-        <input type="hidden" name="postcode" value="{{ $profile['postcode'] }}">
-        <input type="hidden" name="address" value="{{ $profile['address'] }}">
-        <input type="hidden" name="buildingName" value="{{ $profile['buildingName'] ?? '' }}">
-      @endif
-      <div class="purchase__container">
-        <!-- 左側：商品情報・支払い方法・配送先 -->
-        <div class="purchase__left">
-          <!-- 商品情報 -->
-          <div class="purchase__product">
-            <div class="purchase__product-image">
-              <img src="{{ $item['imgUrl'] }}" alt="{{ $item['name'] }}" class="purchase__img">
-            </div>
-            <div class="purchase__product-info">
-              <h2 class="purchase__product-name">{{ $item['name'] }}</h2>
-              <div class="purchase__product-price">¥{{ number_format($item['price']) }}</div>
-            </div>
+    <div class="purchase__container">
+      <!-- 左側：商品情報・支払い方法・配送先 -->
+      <div class="purchase__left">
+        <!-- 商品情報 -->
+        <div class="purchase__product">
+          <div class="purchase__product-image">
+            <img src="{{ $item['imgUrl'] }}" alt="{{ $item['name'] }}" class="purchase__img">
           </div>
-
-          <!-- 支払い方法 -->
-          <div class="purchase__section">
-            <h3 class="purchase__section-title">支払い方法</h3>
-            <select class="purchase__select" name="payment_method">
-              <option value="">選択してください</option>
-              @foreach ($paymentMethods as $value => $label)
-                <option value="{{ $value }}">{{ $label }}</option>
-              @endforeach
-            </select>
-          </div>
-
-          <!-- 配送先 -->
-          <div class="purchase__section">
-            <div class="purchase__section-header">
-              <h3 class="purchase__section-title">配送先</h3>
-              <a href="{{ route('purchase.editAddress', ['item_id' => $item['id']]) }}"
-                class="purchase__change-link">変更する</a>
-            </div>
-            <div class="purchase__address">
-              @if ($profile)
-                <div class="purchase__address-postal">〒{{ $profile['postcode'] }}</div>
-                <div class="purchase__address-detail">
-                  {{ $profile['address'] }}
-                  @if ($profile['buildingName'])
-                    <br>{{ $profile['buildingName'] }}
-                  @endif
-                </div>
-              @else
-                <div class="purchase__address-empty">住所が設定されていません<br><a
-                    href="{{ route('purchase.editAddress', ['item_id' => $item['id']]) }}"
-                    class="purchase__change-link">住所を設定する</a></div>
-              @endif
-            </div>
+          <div class="purchase__product-info">
+            <h2 class="purchase__product-name">{{ $item['name'] }}</h2>
+            <div class="purchase__product-price">¥{{ number_format($item['price']) }}</div>
           </div>
         </div>
 
-        <!-- 右側：注文サマリー・購入ボタン -->
-        <div class="purchase__right">
-          <div class="purchase__summary">
-            <div class="purchase__summary-item">
-              <span class="purchase__summary-label">商品代金</span>
-              <span class="purchase__summary-value">¥{{ number_format($item['price']) }}</span>
-            </div>
-            <div class="purchase__summary-item">
-              <span class="purchase__summary-label">支払い方法</span>
-              <span class="purchase__summary-value" id="selected-payment">選択してください</span>
-            </div>
-          </div>
+        <!-- 支払い方法 -->
+        <div class="purchase__section">
+          <h3 class="purchase__section-title">支払い方法</h3>
+          <select class="purchase__select" name="payment_method" id="payment-method-select">
+            <option value="">選択してください</option>
+            @foreach ($paymentMethods as $value => $label)
+              <option value="{{ $value }}">{{ $label }}</option>
+            @endforeach
+          </select>
+        </div>
 
-          <button class="purchase__button" id="purchase-button" {{ !$profile ? 'disabled' : '' }}
-            style="{{ !$profile ? 'opacity: 0.5;' : '' }}">購入する</button>
+        <!-- 配送先 -->
+        <div class="purchase__section">
+          <div class="purchase__section-header">
+            <h3 class="purchase__section-title">配送先</h3>
+            <a href="{{ route('purchase.editAddress', ['item_id' => $item['id']]) }}"
+              class="purchase__change-link">変更する</a>
+          </div>
+          <div class="purchase__address">
+            @if ($profile)
+              <div class="purchase__address-postal">〒{{ $profile['postcode'] }}</div>
+              <div class="purchase__address-detail">
+                {{ $profile['address'] }}
+                @if ($profile['buildingName'])
+                  <br>{{ $profile['buildingName'] }}
+                @endif
+              </div>
+            @else
+              <div class="purchase__address-empty">住所が設定されていません<br><a
+                  href="{{ route('purchase.editAddress', ['item_id' => $item['id']]) }}"
+                  class="purchase__change-link">住所を設定する</a></div>
+            @endif
+          </div>
         </div>
       </div>
-    </form>
+
+      <!-- 右側：注文サマリー・購入ボタン -->
+      <div class="purchase__right">
+        <div class="purchase__summary">
+          <div class="purchase__summary-item">
+            <span class="purchase__summary-label">商品代金</span>
+            <span class="purchase__summary-value">¥{{ number_format($item['price']) }}</span>
+          </div>
+          <div class="purchase__summary-item">
+            <span class="purchase__summary-label">支払い方法</span>
+            <span class="purchase__summary-value" id="selected-payment">選択してください</span>
+          </div>
+        </div>
+
+        <button type="button" class="purchase__button" id="purchase-button" {{ !$profile ? 'disabled' : '' }}
+          style="{{ !$profile ? 'opacity: 0.5;' : '' }}">
+          購入する
+        </button>
+      </div>
+    </div>
   </div>
 
   <script>
     // 支払い方法の選択を注文サマリーに反映
-    document.querySelector('.purchase__select').addEventListener('change', function() {
+    document.getElementById('payment-method-select').addEventListener('change', function() {
       const selectedOption = this.options[this.selectedIndex];
       const selectedText = selectedOption.text;
       document.getElementById('selected-payment').textContent = selectedText;
@@ -116,25 +110,35 @@
     });
 
     // 購入ボタンのクリックイベント
-    document.getElementById('purchase-button').addEventListener('click', function() {
-      const paymentMethod = document.querySelector('.purchase__select').value;
+    document.getElementById('purchase-button').addEventListener('click', function(e) {
+      e.preventDefault();
+
+      const paymentMethod = document.getElementById('payment-method-select').value;
       if (!paymentMethod) {
         alert('支払い方法を選択してください');
         return;
       }
 
       // プロフィールが設定されているかチェック
-      const postcodeField = document.querySelector('input[name="postcode"]');
-      if (!postcodeField) {
+      @if (!$profile)
         alert('住所が設定されていません。住所設定ページに移動します。');
         window.location.href = '{{ route('purchase.editAddress', ['item_id' => $item['id']]) }}';
         return;
+      @endif
+
+      // 購入確認
+      if (!confirm('購入を確定しますか？')) {
+        return;
       }
 
-      // ここで購入処理を実行
-      if (confirm('購入を確定しますか？')) {
-        // フォームを送信
-        document.querySelector('form').submit();
+      // Stripe決済の場合はCheckoutページに遷移
+      if (paymentMethod === 'stripe') {
+        this.disabled = true;
+        this.textContent = 'Stripe決済ページに移動中...';
+        window.location.href = '{{ route('purchase.stripe-checkout', ['item_id' => $item['id']]) }}';
+      } else {
+        // その他の決済方法の場合は現在準備中
+        alert('この決済方法は現在準備中です');
       }
     });
   </script>

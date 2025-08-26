@@ -19,6 +19,7 @@ class PurchaseRequest extends FormRequest
   {
     return [
       'payment_method' => 'required|in:' . implode(',', array_keys(PaymentMethod::getOptions())),
+      'payment_method_id' => 'nullable|string', // Stripe Payment Method ID
       'postcode' => 'required|string|max:8',
       'address' => 'required|string|max:255',
       'buildingName' => 'nullable|string|max:255',

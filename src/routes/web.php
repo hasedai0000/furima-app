@@ -36,6 +36,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/purchase/{item_id}', [PurchaseController::class, 'procedure'])->name('purchase.procedure');
     Route::get('/purchase/address/{item_id}', [PurchaseController::class, 'editAddress'])->name('purchase.editAddress');
     Route::post('/purchase/{item_id}', [PurchaseController::class, 'purchase'])->name('purchase.purchase');
+    // Stripe Checkout関連
+    Route::get('/purchase/{item_id}/stripe-checkout', [PurchaseController::class, 'stripeCheckout'])->name('purchase.stripe-checkout');
+    Route::get('/purchase/{item_id}/success', [PurchaseController::class, 'checkoutSuccess'])->name('purchase.success');
 });
 
 // Item関連ルート

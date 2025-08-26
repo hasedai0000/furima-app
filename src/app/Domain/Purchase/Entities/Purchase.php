@@ -12,7 +12,7 @@ class Purchase
     private string $paymentMethod;
     private PurchasePostCode $postcode;
     private string $address;
-    private string $buildingName;
+    private ?string $buildingName;
 
     public function __construct(
         string $id,
@@ -21,7 +21,7 @@ class Purchase
         string $paymentMethod,
         PurchasePostCode $postcode,
         string $address,
-        string $buildingName
+        ?string $buildingName
     ) {
         $this->id = $id;
         $this->userId = $userId;
@@ -77,7 +77,7 @@ class Purchase
         $this->address = $address;
     }
 
-    public function setBuildingName(string $buildingName): void
+    public function setBuildingName(?string $buildingName): void
     {
         $this->buildingName = $buildingName;
     }
@@ -85,13 +85,13 @@ class Purchase
     public function toArray(): array
     {
         return [
-          'id' => $this->id,
-          'userId' => $this->userId,
-          'itemId' => $this->itemId,
-          'paymentMethod' => $this->paymentMethod,
-          'postcode' => $this->postcode->formattedValue(),
-          'address' => $this->address,
-          'buildingName' => $this->buildingName,
+            'id' => $this->id,
+            'userId' => $this->userId,
+            'itemId' => $this->itemId,
+            'paymentMethod' => $this->paymentMethod,
+            'postcode' => $this->postcode->formattedValue(),
+            'address' => $this->address,
+            'buildingName' => $this->buildingName ?? null,
         ];
     }
 }

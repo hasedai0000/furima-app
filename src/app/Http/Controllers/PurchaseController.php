@@ -11,6 +11,9 @@ use App\Http\Requests\Purchase\PurchaseRequest;
 use App\Domain\Purchase\ValueObjects\PaymentMethod;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
+use Stripe\Stripe;
+use Stripe\Checkout\Session;
 
 class PurchaseController extends Controller
 {
@@ -51,6 +54,68 @@ class PurchaseController extends Controller
         return view('purchase.address', compact('itemId', 'profile'));
     }
 
+    /**
+     * Stripe Checkoutページへリダイレクト
+     */
+    public function stripeCheckout(string $itemId): RedirectResponse
+    {
+        try {
+            $item = $this->itemService->getItem($itemId);
+            $checkoutUrl = $this->purchaseService->createCheckoutSession($item);
+
+            return redirect($checkoutUrl);
+        } catch (\Exception $e) {
+            return redirect()->route('purchase.procedure', $itemId)
+                ->with('error', $e->getMessage());
+        }
+    }
+
+    /**
+     * Stripe Checkout成功後の処理
+     */
+    public function checkoutSuccess(Request $request, string $itemId): RedirectResponse
+    {
+        try {
+            $sessionId = $request->query('session_id');
+
+            if (!$sessionId) {
+                throw new \Exception('セッションIDが見つかりません');
+            }
+
+            // Stripe セッション情報を取得
+            Stripe::setApiKey(config('services.stripe.st_key'));
+            $session = Session::retrieve($sessionId);
+
+            if ($session->payment_status !== 'paid') {
+                throw new \Exception('決済が完了していません');
+            }
+
+            // 購入処理を実行（住所情報はプロフィールから取得）
+            $userId = $this->authService->requireAuthentication();
+            $profileEntity = $this->profileService->getProfile($userId);
+
+            if (!$profileEntity) {
+                throw new \Exception('住所情報が設定されていません');
+            }
+
+            $profile = $profileEntity->toArray();
+
+            $this->purchaseService->completePurchase(
+                $itemId,
+                PaymentMethod::STRIPE,
+                $profile['postcode'],
+                $profile['address'],
+                $profile['buildingName']
+            );
+
+            return redirect()->route('items.detail', $itemId)
+                ->with('success', '購入が完了しました');
+        } catch (\Exception $e) {
+            return redirect()->route('items.detail', $itemId)
+                ->with('error', $e->getMessage());
+        }
+    }
+
     public function purchase(PurchaseRequest $request, string $itemId): RedirectResponse
     {
         try {
@@ -62,7 +127,8 @@ class PurchaseController extends Controller
                 $validatedData['payment_method'],
                 $validatedData['postcode'],
                 $validatedData['address'],
-                $validatedData['buildingName']
+                $validatedData['buildingName'],
+                $validatedData['payment_method_id'] ?? null
             );
 
             return redirect()->route('items.detail', $itemId)->with('success', '購入が完了しました');

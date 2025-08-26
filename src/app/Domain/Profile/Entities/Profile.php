@@ -12,7 +12,7 @@ class Profile
     private ?ProfileImgUrl $imgUrl;
     private ProfilePostCode $postcode;
     private string $address;
-    private string $buildingName;
+    private ?string $buildingName;
 
     public function __construct(
         string $id,
@@ -20,7 +20,7 @@ class Profile
         ?ProfileImgUrl $imgUrl,
         ProfilePostCode $postcode,
         string $address,
-        string $buildingName
+        ?string $buildingName
     ) {
         $this->id = $id;
         $this->userId = $userId;
@@ -55,7 +55,7 @@ class Profile
         return $this->address;
     }
 
-    public function getBuildingName(): string
+    public function getBuildingName(): ?string
     {
         return $this->buildingName;
     }
@@ -75,7 +75,7 @@ class Profile
         $this->address = $address;
     }
 
-    public function setBuildingName(string $buildingName): void
+    public function setBuildingName(?string $buildingName): void
     {
         $this->buildingName = $buildingName;
     }
@@ -88,12 +88,12 @@ class Profile
     public function toArray(): array
     {
         return [
-         'id' => $this->id,
-         'userId' => $this->userId,
-         'imgUrl' => $this->imgUrl ? $this->imgUrl->value() : null,
-         'postcode' => $this->postcode->formattedValue(),
-         'address' => $this->address,
-         'buildingName' => $this->buildingName,
+            'id' => $this->id,
+            'userId' => $this->userId,
+            'imgUrl' => $this->imgUrl ? $this->imgUrl->value() : null,
+            'postcode' => $this->postcode->formattedValue(),
+            'address' => $this->address,
+            'buildingName' => $this->buildingName ?? null,
         ];
     }
 }

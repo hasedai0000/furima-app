@@ -6,12 +6,14 @@ class PaymentMethod
 {
     // 支払い方法の定数
     public const CREDIT_CARD = 'credit_card';
+    public const STRIPE = 'stripe';
     public const CONVENIENCE_STORE = 'convenience_store';
 
     // 支払い方法の表示名
     public const LABELS = [
-     self::CREDIT_CARD => 'クレジットカード',
-     self::CONVENIENCE_STORE => 'コンビニ払い',
+        self::CREDIT_CARD => 'クレジットカード',
+        self::STRIPE => 'Stripe決済',
+        self::CONVENIENCE_STORE => 'コンビニ払い',
     ];
 
     private string $value;
@@ -25,8 +27,9 @@ class PaymentMethod
     private function validatePaymentMethod(string $value): void
     {
         if (! in_array($value, [
-         self::CREDIT_CARD,
-         self::CONVENIENCE_STORE,
+            self::CREDIT_CARD,
+            self::STRIPE,
+            self::CONVENIENCE_STORE,
         ], true)) {
             throw new \DomainException('無効な支払い方法です');
         }
