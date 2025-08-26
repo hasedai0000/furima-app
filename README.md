@@ -1,10 +1,67 @@
-# アプリケーション名
+# coachtech フリマ
 
-coachtech フリマ
+## プロジェクトの概要
 
-## 概要
+coachtech フリマは、Laravel で構築されたフリーマーケットアプリケーションです。ユーザーが商品を出品・購入・閲覧できるプラットフォームを提供します。
 
-## 技術スタック
+### 主な機能
+
+- **ユーザー認証・管理**
+
+  - 新規会員登録・ログイン・ログアウト
+  - メール認証機能
+  - プロフィール編集・住所管理
+
+- **商品関連機能**
+
+  - 商品出品・編集・削除
+  - 商品検索・カテゴリー別表示
+  - 商品詳細表示・画像アップロード
+  - お気に入り機能・コメント機能
+
+- **購入・決済機能**
+
+  - 商品購入機能
+  - Stripe 決済連携
+  - 配送先住所変更
+
+- **その他**
+  - レスポンシブデザイン対応
+  - バリデーション機能
+  - ファイルアップロード機能
+
+## 使用技術
+
+### バックエンド
+
+- **PHP** 7.3
+- **Laravel** 8.x
+- **MySQL** 8.0.26
+
+### フロントエンド
+
+- **HTML5/CSS3**
+- **JavaScript**
+- **Blade テンプレートエンジン**
+
+### 認証・決済
+
+- **Laravel Fortify** (認証機能)
+- **Laravel Cashier** (Stripe 決済)
+
+### 開発・運用環境
+
+- **Docker** & **Docker Compose**
+- **Nginx** 1.21.1
+- **PHPMyAdmin** (データベース管理)
+- **MailHog** (メール送信テスト)
+
+### 開発ツール
+
+- **PHPStan** (静的解析)
+- **PHP CodeSniffer** (コード規約チェック)
+- **PHP CS Fixer** (コード整形)
+- **PHPUnit** (テスト)
 
 ## 環境構築手順
 
@@ -20,66 +77,97 @@ coachtech フリマ
 ```bash
 # SSHでクローンする場合
 git clone git@github.com:hasedai0000/furima-app.git
+
 # HTTPSでクローンする場合
 git clone https://github.com/hasedai0000/furima-app.git
+
+cd furima-app
 ```
 
 ### 2. 環境の起動
-
-プロジェクトのルートディレクトリで以下のコマンドを実行してください：
 
 ```bash
 # Dockerコンテナをビルドして起動
 docker compose up -d --build
 ```
 
-#### Laravel プロジェクトの作成
+### 3. Laravel アプリケーションのセットアップ
 
 ```bash
-# phpのコンテナに入る
+# PHPコンテナに入る
 docker compose exec php bash
 
-# Laravelのインストール
-composer create-project "laravel/laravel=8.*" . --prefer-dist
+# 依存関係のインストール
+composer install
+
+# 環境設定ファイルのコピー
+cp .env.example .env
+
+# アプリケーションキーの生成
+php artisan key:generate
+
+# データベースマイグレーションとシーダーの実行
+php artisan migrate:fresh --seed
 ```
 
-#### 2 回目以降の起動
-
-```bash
-docker compose up -d
-
-```
-
-### 3. 動作確認
+### 4. 動作確認
 
 ブラウザで以下の URL にアクセスして、アプリケーションが正常に動作することを確認してください：
 
-```
-http://localhost
-```
+- **アプリケーション**: http://localhost
+- **PHPMyAdmin**: http://localhost:8080
+- **MailHog**: http://localhost:8025
 
-正常に動作している場合、「COACHTECH」と表示されます。
-
-### 4. 開発時の操作
-
-#### コンテナの停止
+### 5. 2 回目以降の起動
 
 ```bash
-# コンテナを停止（バックグラウンドで実行中の場合）
+docker compose up -d
+```
+
+## ログイン情報
+
+### テストユーザー（一般ユーザー）
+
+以下のアカウントでログインできます：
+
+| ユーザー名     | メールアドレス        | パスワード | 状態     |
+| -------------- | --------------------- | ---------- | -------- |
+| テストユーザー | test@example.com      | password   | 認証済み |
+| 田中太郎       | tanaka@example.com    | password   | 認証済み |
+| 佐藤花子       | sato@example.com      | password   | 認証済み |
+| 鈴木美咲       | suzuki@example.com    | password   | 認証済み |
+| 高橋健太       | takahashi@example.com | password   | 認証済み |
+
+### メール未認証ユーザー
+
+| ユーザー名 | メールアドレス     | パスワード | 状態   |
+| ---------- | ------------------ | ---------- | ------ |
+| 山田次郎   | yamada@example.com | password   | 未認証 |
+| 伊藤愛     | ito@example.com    | password   | 未認証 |
+
+### データベース接続情報
+
+- **データベース名**: laravel_db
+- **ユーザー名**: laravel_user
+- **パスワード**: laravel_pass
+- **ホスト**: mysql（コンテナ間通信）
+
+## 開発時の操作
+
+### コンテナの操作
+
+```bash
+# コンテナを停止
 docker compose stop
 
 # コンテナを停止して削除
 docker compose down
-```
 
-#### コンテナの再起動
-
-```bash
 # コンテナを再起動
 docker compose restart
 ```
 
-#### ログの確認
+### ログの確認
 
 ```bash
 # 全サービスのログを確認
@@ -88,9 +176,10 @@ docker compose logs
 # 特定のサービスのログを確認
 docker compose logs nginx
 docker compose logs php
+docker compose logs mysql
 ```
 
-#### コンテナ内での作業
+### コンテナ内での作業
 
 ```bash
 # PHPコンテナに入る
@@ -99,69 +188,91 @@ docker compose exec php bash
 # Nginxコンテナに入る
 docker compose exec nginx bash
 
-# mysqlコンテナに入る
+# MySQLコンテナに入る
 docker compose exec mysql bash
 ```
 
-#### MySQL へのアクセス
+### MySQL への直接アクセス
 
 ```bash
-# mysqlコンテナに入る
-docker compose exec mysql bash
-# mysqlにログイン
-mysql -u ユーザ名 -p
-
-### 5. ファイル構成
-
+# MySQLコンテナ内でMySQLにログイン
+docker compose exec mysql mysql -u laravel_user -p laravel_db
+# パスワード: laravel_pass
 ```
 
+### 開発用コマンド
+
+```bash
+# PHPコンテナ内で実行
+
+# マイグレーションの実行
+php artisan migrate
+
+# シーダーの実行
+php artisan db:seed
+
+# コード品質チェック
+composer run-script quality
+
+# テストの実行
+composer run-script test
+```
+
+## ファイル構成
+
+```
 Furima/
-├── docker/
-│ ├── nginx/
-│ │ └── default.conf # Nginx 設定ファイル
-│ └── php/
-│ ├── Dockerfile # PHP コンテナの設定
-│ └── php.ini # PHP 設定ファイル
-├── src/
-│ └── index.php # メインの PHP ファイル
-├── docker-compose.yml # Docker Compose 設定
-└── README.md # このファイル
+├── docker/                 # Docker設定
+│   ├── nginx/
+│   │   └── default.conf    # Nginx設定
+│   ├── php/
+│   │   ├── Dockerfile      # PHP設定
+│   │   └── php.ini         # PHP設定
+│   └── mysql/
+│       └── my.cnf          # MySQL設定
+├── src/                    # Laravelアプリケーション
+│   ├── app/                # アプリケーションロジック
+│   ├── database/           # マイグレーション・シーダー
+│   ├── public/             # 公開ファイル
+│   ├── resources/          # ビュー・CSS・JS
+│   └── routes/             # ルート定義
+├── docker-compose.yml      # Docker Compose設定
+└── README.md              # このファイル
+```
 
-````
+## トラブルシューティング
 
-### 6. トラブルシューティング
+### ポート競合の場合
 
-#### ポート 80 が既に使用されている場合
-
-他のアプリケーションがポート 80 を使用している場合は、`docker-compose.yml`の`ports`セクションを変更してください：
+ポート 80 が使用中の場合、`docker-compose.yml`を編集：
 
 ```yaml
-ports:
-  - "8080:80" # ホストの8080ポートを使用
-````
+services:
+  nginx:
+    ports:
+      - "8080:80" # ホストの8080ポートを使用
+```
 
-この場合、アクセス URL は `http://localhost:8080` になります。
+アクセス URL: http://localhost:8080
 
-#### コンテナが起動しない場合
+### コンテナが起動しない場合
 
 ```bash
-# コンテナの状態を確認
+# コンテナの状態確認
 docker compose ps
 
-# ログを確認してエラーの詳細を確認
+# ログでエラー確認
 docker compose logs
 
-# コンテナを完全に削除して再ビルド
+# 完全にクリーンアップして再構築
 docker compose down --volumes --remove-orphans
 docker compose up --build
 ```
 
-### 7. 開発のヒント
+### データベース接続エラー
 
-- `src/` ディレクトリ内のファイルを編集すると、コンテナ内に自動的に反映されます
-- PHP ファイルを変更した場合は、ブラウザでリロードするだけで変更が反映されます
-- Nginx 設定を変更した場合は、コンテナの再起動が必要です
-
-## ライセンス
-
-このプロジェクトのライセンス情報をここに記載してください。
+```bash
+# PHPコンテナ内で接続確認
+docker compose exec php php artisan tinker
+DB::connection()->getPdo();
+```
