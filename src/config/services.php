@@ -33,7 +33,6 @@ return [
     'stripe' => [
         'pb_key' => env('STRIPE_KEY'),
         'st_key' => env('STRIPE_SECRET'),
-        'cashier_currency' => env('CASHIER_CURRENCY'),
     ],
 
 ];
