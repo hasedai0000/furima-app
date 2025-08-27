@@ -35,18 +35,6 @@ class FortifyServiceProvider extends ServiceProvider
 
         Fortify::resetUserPasswordsUsing(ResetUserPasswordService::class);
 
-        Fortify::registerView(function () {
-            return view('auth.register');
-        });
-
-        Fortify::loginView(function () {
-            return view('auth.login');
-        });
-
-        Fortify::verifyEmailView(function () {
-            return view('auth.verify-email');
-        });
-
         // 新規登録後のリダイレクト先を設定
         Fortify::redirects('register', '/email/verify');
 

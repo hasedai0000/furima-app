@@ -171,7 +171,6 @@
   document.addEventListener('DOMContentLoaded', function() {
     const fileInput = document.getElementById('imageInput');
     const preview = document.getElementById('preview');
-    const previewContainer = document.querySelector('.item-image__preview');
     const button = document.querySelector('.item-image__button');
 
     fileInput.addEventListener('change', function(e) {

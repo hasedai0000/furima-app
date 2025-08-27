@@ -13,7 +13,9 @@
           @if (Auth::user()->profile && Auth::user()->profile->img_url)
             <img src="{{ asset(Auth::user()->profile->img_url) }}" alt="プロフィール画像" class="profile__avatar">
           @else
-            <img src="{{ asset('images/default-profile.png') }}" alt="デフォルトプロフィール画像" class="profile__avatar">
+            <div class="profile-image__placeholder">
+              <span>画像なし</span>
+            </div>
           @endif
         </div>
         <div class="profile__details">

@@ -26,8 +26,9 @@ class CreateUserService implements CreatesNewUsers
          'password' => Hash::make($input['password']),
         ]);
 
-        // ユーザーをログイン状態にする
-        Auth::login($user);
+        // メール認証が必要なので、ここではログインしない
+        // ユーザーにメール認証通知を送信
+        $user->sendEmailVerificationNotification();
 
         return $user;
     }
