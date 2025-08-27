@@ -8,15 +8,24 @@
 @section('content')
   <div class="auth-form__content">
     @if (session('success'))
-      <div class="alert alert-success">
+      <div class="message success-message">
         {{ session('success') }}
+      </div>
+    @endif
+    @if (session('error'))
+      <div class="message error-message">
+        {{ session('error') }}
       </div>
     @endif
     <div class="profile-form__heading">
       <h2 class="auth-form__heading-title">プロフィール設定</h2>
     </div>
-    <form class="form" action="{{ route('mypage.profile.store') }}" method="post" enctype="multipart/form-data">
+    <form class="form" action="{{ $profile ? route('mypage.profile.update') : route('mypage.profile.store') }}"
+      method="post" enctype="multipart/form-data">
       @csrf
+      @if ($profile)
+        @method('PUT')
+      @endif
       <div class="form__group">
         <div class="form__group-content">
           <div class="profile-image__container">
@@ -30,13 +39,15 @@
               @endif
             </div>
             <div class="profile-image__upload">
-              <input type="file" name="profile_image" id="profile_image" accept="image/*" class="profile-image__input">
+              <input type="file" name="imgUrl" id="profile_image" accept="image/*" class="profile-image__input">
               <label for="profile_image" class="profile-image__button">画像を選択する</label>
             </div>
           </div>
-          @error('profile_image')
-            {{ $message }}
-          @enderror
+          <div class="form__error">
+            @error('imgUrl')
+              {{ $message }}
+            @enderror
+          </div>
         </div>
       </div>
       <div class="form__group">
@@ -47,9 +58,11 @@
           <div class="form__input--text">
             <input type="text" name="name" value="{{ $name ?? old('name') }}" />
           </div>
-          @error('name')
-            {{ $message }}
-          @enderror
+          <div class="form__error">
+            @error('name')
+              {{ $message }}
+            @enderror
+          </div>
         </div>
       </div>
       <div class="form__group">
@@ -90,6 +103,11 @@
           <div class="form__input--text">
             <input type="text" name="buildingName" value="{{ $profile['buildingName'] ?? old('buildingName') }}" />
           </div>
+          <div class="form__error">
+            @error('buildingName')
+              {{ $message }}
+            @enderror
+          </div>
         </div>
       </div>
       <div class="form__button">
@@ -99,22 +117,20 @@
   </div>
 @endsection
 
-@section('js')
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const fileInput = document.getElementById('profile_image');
-      const preview = document.querySelector('.profile-image__preview');
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('profile_image');
+    const preview = document.querySelector('.profile-image__preview');
 
-      fileInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = function(e) {
-            preview.innerHTML = `<img src="${e.target.result}" alt="プレビュー画像" class="profile-image__current">`;
-          };
-          reader.readAsDataURL(file);
-        }
-      });
+    fileInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          preview.innerHTML = `<img src="${e.target.result}" alt="プレビュー画像" class="profile-image__current">`;
+        };
+        reader.readAsDataURL(file);
+      }
     });
-  </script>
-@endsection
+  });
+</script>

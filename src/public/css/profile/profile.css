@@ -3,13 +3,38 @@
     display: flex;
     align-items: center;
     gap: 20px;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
 }
+
+/* プロフィールフォーム専用のスタイル調整 */
+.auth-form__content .form__group:last-of-type {
+    margin-bottom: 20px;
+}
+
+/* エラーメッセージの統一 */
+.auth-form__content .form__error {
+    height: 20px;
+    color: #ff0000;
+    text-align: left;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* 各入力フィールドのコンテナ統一 */
+.auth-form__content .form__group-content {
+    margin-top: 8px;
+}
+
+/* プロフィール画像エリアの調整 */
+.auth-form__content .profile-image__container {
+    margin-bottom: 30px;
+}
+
 .profile-form__heading {
     text-align: center;
     width: 200px;
     margin: 0 auto;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
 }
 
 .profile-image__preview {
@@ -21,12 +46,6 @@
     align-items: center;
     justify-content: center;
     background-color: #d9d9d9;
-}
-
-.profile-image__current {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
 }
 
 .profile-image__current {

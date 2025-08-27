@@ -36,7 +36,7 @@ class ProfileService
      * @param string|null $imgUrl
      * @param string $postcode
      * @param string $address
-     * @param string $buildingName
+     * @param string|null $buildingName
      * @return ProfileEntity
      */
     public function createProfile(
@@ -44,7 +44,7 @@ class ProfileService
         ?string $imgUrl,
         string $postcode,
         string $address,
-        string $buildingName
+        ?string $buildingName
     ): ProfileEntity {
         $profileImg = $imgUrl ? new ProfileImgUrl($imgUrl) : null;
         $profilePostcode = new ProfilePostCode($postcode);
@@ -55,7 +55,7 @@ class ProfileService
             $profileImg,
             $profilePostcode,
             $address,
-            $buildingName
+            $buildingName ?? ''
         );
 
         $this->profileRepository->save($profile);
@@ -70,7 +70,7 @@ class ProfileService
      * @param string|null $imgUrl
      * @param string $postcode
      * @param string $address
-     * @param string $buildingName
+     * @param string|null $buildingName
      * @return ProfileEntity
      */
     public function updateProfile(
@@ -78,7 +78,7 @@ class ProfileService
         ?string $imgUrl,
         string $postcode,
         string $address,
-        string $buildingName
+        ?string $buildingName
     ): ProfileEntity {
         // 既存のプロフィールを取得
         $existingProfile = $this->profileRepository->findByUserId($userId);
@@ -106,7 +106,7 @@ class ProfileService
             $profileImg,
             $profilePostcode,
             $address,
-            $buildingName
+            $buildingName ?? ''
         );
 
         $this->profileRepository->save($profile);

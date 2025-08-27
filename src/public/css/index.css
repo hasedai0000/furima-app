@@ -347,6 +347,16 @@
     .profile__username {
         font-size: 20px;
     }
+
+    .profile-image__placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        color: #999;
+        font-size: 14px;
+    }
 }
 
 @media (max-width: 480px) {

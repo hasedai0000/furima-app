@@ -283,3 +283,36 @@ a:hover {
         width: 100%;
     }
 }
+
+/* メッセージ共通スタイル */
+.message {
+    font-size: 14px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid;
+}
+
+.success-message {
+    color: #28a745;
+    background: #f8fff9;
+    border-color: #d4edda;
+}
+
+.error-message {
+    color: #dc3545;
+    background: #fff5f5;
+    border-color: #f5c6cb;
+}
+
+.warning-message {
+    color: #856404;
+    background: #fff8e1;
+    border-color: #ffeaa7;
+}
+
+.info-message {
+    color: #0c5460;
+    background: #e8f4f8;
+    border-color: #bee5eb;
+}

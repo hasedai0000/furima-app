@@ -333,27 +333,7 @@
     background: #cc0000;
 }
 
-/* エラーメッセージ */
-.error-message {
-    color: #ff0000;
-    font-size: 14px;
-    margin-bottom: 15px;
-    padding: 10px;
-    background: #fff5f5;
-    border: 1px solid #ffebee;
-    border-radius: 4px;
-}
-
 /* サクセスメッセージ */
-.success-message {
-    color: #28a745;
-    font-size: 14px;
-    margin-bottom: 15px;
-    padding: 10px;
-    background: #f8fff9;
-    border: 1px solid #d4edda;
-    border-radius: 4px;
-}
 
 /* レスポンシブデザイン */
 /* PC (1400-1540px) */

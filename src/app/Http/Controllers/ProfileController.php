@@ -50,7 +50,9 @@ class ProfileController extends Controller
             $items = $this->itemService->getMyBuyItems($searchTerm);
         }
 
-        return view('mypage.index', compact('items', 'searchTerm'));
+        $profile = $this->profileService->getProfile(auth()->id())->toArray();
+
+        return view('mypage.index', compact('items', 'searchTerm', 'profile'));
     }
 
     /**
@@ -150,7 +152,7 @@ class ProfileController extends Controller
                 $validatedData['buildingName']
             );
 
-            return redirect()->route('items.index')->with('success', 'プロフィールが正常に更新されました。');
+            return redirect()->route('mypage.index')->with('success', 'プロフィールが正常に更新されました。');
         } catch (\Exception $e) {
             // エラーが発生した場合はエラーメッセージを表示
             return back()->withErrors(['error' => $e->getMessage()]);
