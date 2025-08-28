@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
 use App\Domain\User\Services\CreateUserService;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 
 class AuthController extends Controller
 {
@@ -23,22 +25,21 @@ class AuthController extends Controller
     /**
      * ログイン処理
      */
-    public function login(Request $request): RedirectResponse
+    public function login(LoginRequest $request): RedirectResponse
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        try {
+            $validatedData = $request->validated();
 
-        if (Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
-            $request->session()->regenerate();
+            if (Auth::attempt($validatedData, $request->boolean('remember'))) {
+                $request->session()->regenerate();
 
-            return redirect()->intended(config('fortify.home'));
+                return redirect()->intended(config('fortify.home'));
+            }
+
+            return redirect()->back()->withErrors(['email' => 'メールアドレスまたはパスワードが間違っています。']);
+        } catch (ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors());
         }
-
-        throw ValidationException::withMessages([
-            'email' => ['認証に失敗しました。'],
-        ]);
     }
 
     /**
@@ -65,14 +66,19 @@ class AuthController extends Controller
     /**
      * 新規登録処理
      */
-    public function register(Request $request, CreateUserService $createUserService): RedirectResponse
+    public function register(RegisterRequest $request, CreateUserService $createUserService): RedirectResponse
     {
-        $user = $createUserService->create($request->all());
+        try {
+            $validatedData = $request->validated();
+            $user = $createUserService->create($validatedData);
 
-        // ユーザーを一時的にログイン状態にしてメール認証画面にアクセスできるようにする
-        Auth::login($user);
+            Auth::login($user);
 
-        return redirect('/email/verify');
+            return redirect('/email/verify');
+        } catch (ValidationException $e) {
+
+            return redirect()->back()->withErrors($e->errors());
+        }
     }
 
     /**
@@ -113,14 +119,14 @@ class AuthController extends Controller
     public function verifyEmail(Request $request): RedirectResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect(config('fortify.home'));
+            return redirect()->route('mypage.profile.show');
         }
 
         if ($request->user()->markEmailAsVerified()) {
             event(new \Illuminate\Auth\Events\Verified($request->user()));
         }
 
-        return redirect(config('fortify.home'))->with('verified', true);
+        return redirect()->route('mypage.profile.show')->with('verified', true);
     }
 
     /**

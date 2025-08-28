@@ -112,7 +112,9 @@
             @foreach ($item['comments'] as $comment)
               <div class="item-detail__comment">
                 <div class="item-detail__comment-header">
-                  <div class="item-detail__comment-avatar"></div>
+                  <div class="item-detail__comment-avatar">
+                    <img src="{{ asset($comment['user']['profile_img_url']) }}" alt="{{ $comment['user']['name'] }}">
+                  </div>
                   <span class="item-detail__comment-author">{{ $comment['user']['name'] ?? '匿名ユーザー' }}</span>
                 </div>
                 <div class="item-detail__comment-content">

@@ -105,7 +105,7 @@ class EloquentItemRepository implements ItemRepositoryInterface
      */
     public function findById(string $id): ?ItemEntity
     {
-        $eloquentItem = Item::with('purchases', 'categories', 'comments.user', 'likes')->find($id);
+        $eloquentItem = Item::with('purchases', 'categories', 'comments.user.profile', 'likes')->find($id);
 
         if (! $eloquentItem) {
             return null;
@@ -125,7 +125,18 @@ class EloquentItemRepository implements ItemRepositoryInterface
             new ItemImgUrl($eloquentItem->img_url),
             $eloquentItem->purchases->toArray() ? true : false,
             $eloquentItem->categories->toArray(),
-            $eloquentItem->comments->toArray(),
+            $eloquentItem->comments->map(function ($comment) {
+                return [
+                    'id' => $comment->id,
+                    'content' => $comment->content,
+                    'created_at' => $comment->created_at,
+                    'user' => [
+                        'id' => $comment->user->id,
+                        'name' => $comment->user->name,
+                        'profile_img_url' => $comment->user->profile ? $comment->user->profile->img_url : null,
+                    ]
+                ];
+            })->toArray(),
             $eloquentItem->likes->toArray()
         );
     }
