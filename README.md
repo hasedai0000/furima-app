@@ -242,16 +242,12 @@ composer run-script test
 プッシュ・プルリクエスト時に以下が自動実行されます：
 
 - **テスト実行**: PHPUnit を使用したユニットテスト・フィーチャーテスト
-- **コード品質チェック**: PHPStan による静的解析
-- **コードスタイルチェック**: PHP_CodeSniffer によるコーディング規約チェック
-- **セキュリティ監査**: Composer セキュリティ監査
 
 ### マトリックステスト
 
 複数の PHP バージョンでテストを実行：
 
 - PHP 8.0
-- PHP 8.1
 
 ### ワークフロー
 
@@ -260,10 +256,7 @@ CI 設定ファイル: `.github/workflows/ci.yml`
 ```bash
 # ローカルで同じテストを実行する場合
 cd src
-composer quality  # 全品質チェック実行
-composer test      # テストのみ実行
-composer analyse   # PHPStanのみ実行
-composer cs-check  # コードスタイルチェックのみ実行
+composer test      # PHPUnit テストを実行
 ```
 
 ## ファイル構成
