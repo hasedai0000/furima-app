@@ -54,7 +54,7 @@ class Item extends Model
 
     public function comments(): HasMany
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class)->orderBy('created_at', 'asc');
     }
 
     public function purchases(): HasMany

@@ -107,8 +107,24 @@ cp .env.example .env
 # アプリケーションキーの生成
 php artisan key:generate
 
+# 画像保存のためシンボリックリンクを作成する
+php artisan storage:link
+
+```
+
+#### 3.1 データベース接続情報
+
+```bash
+
+# .envにDB接続情報の設定
+- **DB_DATABASE**: laravel_db
+- **DB_USERNAME**: laravel_user
+- **DB_PASSWORD**: laravel_pass
+- **DB_HOST**: mysql #（コンテナ間通信）
+
 # データベースマイグレーションとシーダーの実行
 php artisan migrate:fresh --seed
+
 ```
 
 ### 4. 動作確認
@@ -145,13 +161,6 @@ docker compose up -d
 | ---------- | ------------------ | ---------- | ------ |
 | 山田次郎   | yamada@example.com | password   | 未認証 |
 | 伊藤愛     | ito@example.com    | password   | 未認証 |
-
-### データベース接続情報
-
-- **データベース名**: laravel_db
-- **ユーザー名**: laravel_user
-- **パスワード**: laravel_pass
-- **ホスト**: mysql（コンテナ間通信）
 
 ## Stripe の設定
 
