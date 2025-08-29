@@ -137,8 +137,48 @@
         this.textContent = 'Stripe決済ページに移動中...';
         window.location.href = '{{ route('purchase.stripe-checkout', ['item_id' => $item['id']]) }}';
       } else {
-        // その他の決済方法の場合は現在準備中
-        alert('この決済方法は現在準備中です');
+        // コンビニ支払いの場合はPOSTリクエストで送信
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ route('purchase.purchase', ['item_id' => $item['id']]) }}';
+
+        // CSRFトークンを追加
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = '_token';
+        csrfToken.value = '{{ csrf_token() }}';
+        form.appendChild(csrfToken);
+
+        // 支払い方法を追加
+        const paymentInput = document.createElement('input');
+        paymentInput.type = 'hidden';
+        paymentInput.name = 'payment_method';
+        paymentInput.value = paymentMethod;
+        form.appendChild(paymentInput);
+
+        @if ($profile)
+          // プロフィール情報を追加
+          const postcodeInput = document.createElement('input');
+          postcodeInput.type = 'hidden';
+          postcodeInput.name = 'postcode';
+          postcodeInput.value = '{{ $profile['postcode'] }}';
+          form.appendChild(postcodeInput);
+
+          const addressInput = document.createElement('input');
+          addressInput.type = 'hidden';
+          addressInput.name = 'address';
+          addressInput.value = '{{ $profile['address'] }}';
+          form.appendChild(addressInput);
+
+          const buildingNameInput = document.createElement('input');
+          buildingNameInput.type = 'hidden';
+          buildingNameInput.name = 'buildingName';
+          buildingNameInput.value = '{{ $profile['buildingName'] ?? '' }}';
+          form.appendChild(buildingNameInput);
+        @endif
+
+        document.body.appendChild(form);
+        form.submit();
       }
     });
   </script>

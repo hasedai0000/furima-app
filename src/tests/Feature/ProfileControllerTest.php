@@ -7,7 +7,6 @@ use Illuminate\Foundation\Testing\WithFaker;
 use App\Models\User;
 use App\Models\Item;
 use App\Models\Profile;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -245,7 +244,7 @@ class ProfileControllerTest extends TestCase
     $response = $this->put('/mypage/profile', $updateData);
 
     // 事後条件: リダイレクトと成功メッセージ
-    $response->assertRedirect('/');
+    $response->assertRedirect('/mypage');
     $response->assertSessionHas('success', 'プロフィールが正常に更新されました。');
 
     // 不変条件: データベースのプロフィールが更新されること

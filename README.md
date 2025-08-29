@@ -29,12 +29,13 @@ coachtech フリマは、Laravel で構築されたフリーマーケットア�
   - レスポンシブデザイン対応
   - バリデーション機能
   - ファイルアップロード機能
+  - CI/CD (GitHub Actions)
 
 ## 使用技術
 
 ### バックエンド
 
-- **PHP** 7.3
+- **PHP** 7.3|8.0
 - **Laravel** 8.x
 - **MySQL** 8.0.26
 
@@ -230,6 +231,39 @@ composer run-script quality
 
 # テストの実行
 composer run-script test
+```
+
+## CI/CD
+
+このプロジェクトでは GitHub Actions を使用して CI/CD パイプラインを構築しています。
+
+### 自動テスト
+
+プッシュ・プルリクエスト時に以下が自動実行されます：
+
+- **テスト実行**: PHPUnit を使用したユニットテスト・フィーチャーテスト
+- **コード品質チェック**: PHPStan による静的解析
+- **コードスタイルチェック**: PHP_CodeSniffer によるコーディング規約チェック
+- **セキュリティ監査**: Composer セキュリティ監査
+
+### マトリックステスト
+
+複数の PHP バージョンでテストを実行：
+
+- PHP 8.0
+- PHP 8.1
+
+### ワークフロー
+
+CI 設定ファイル: `.github/workflows/ci.yml`
+
+```bash
+# ローカルで同じテストを実行する場合
+cd src
+composer quality  # 全品質チェック実行
+composer test      # テストのみ実行
+composer analyse   # PHPStanのみ実行
+composer cs-check  # コードスタイルチェックのみ実行
 ```
 
 ## ファイル構成

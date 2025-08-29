@@ -21,7 +21,7 @@
     <div class="profile__section">
       <div class="profile__info">
         <div class="profile__image">
-          @if ($profile['imgUrl'])
+          @if ($profile && $profile['imgUrl'])
             <img src="{{ asset($profile['imgUrl']) }}" alt="プロフィール画像" class="profile__avatar">
           @else
             <div class="profile-image__placeholder">

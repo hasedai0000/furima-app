@@ -50,7 +50,8 @@ class ProfileController extends Controller
             $items = $this->itemService->getMyBuyItems($searchTerm);
         }
 
-        $profile = $this->profileService->getProfile(auth()->id())->toArray();
+        $profileEntity = $this->profileService->getProfile(auth()->id());
+        $profile = $profileEntity ? $profileEntity->toArray() : null;
 
         return view('mypage.index', compact('items', 'searchTerm', 'profile'));
     }

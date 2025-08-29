@@ -6,7 +6,6 @@ use App\Application\Services\AuthenticationService;
 use App\Application\Services\ItemService;
 use App\Application\Services\ProfileService;
 use App\Application\Services\PurchaseService;
-use App\Http\Requests\Purchase\AddressUpdateRequest;
 use App\Http\Requests\Purchase\PurchaseRequest;
 use App\Domain\Purchase\ValueObjects\PaymentMethod;
 use Illuminate\Http\RedirectResponse;
@@ -122,13 +121,13 @@ class PurchaseController extends Controller
             // バリデーション
             $validatedData = $request->validated();
 
-            $this->purchaseService->purchase(
+            // リクエストから住所情報を取得してPurchaseテーブルに保存
+            $this->purchaseService->completePurchase(
                 $itemId,
                 $validatedData['payment_method'],
                 $validatedData['postcode'],
                 $validatedData['address'],
-                $validatedData['buildingName'],
-                $validatedData['payment_method_id'] ?? null
+                $validatedData['buildingName']
             );
 
             return redirect()->route('items.detail', $itemId)->with('success', '購入が完了しました');

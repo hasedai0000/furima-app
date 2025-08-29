@@ -280,10 +280,11 @@ class PurchaseControllerTest extends TestCase
     // モックの設定
     $this->mockPurchaseService();
 
-    // 事前条件: 認証済みユーザーとアイテム
+    // 事前条件: 認証済みユーザー、アイテム、プロフィール
     /** @var User $user */
     $user = User::factory()->create();
     $item = Item::factory()->create();
+    $profile = Profile::factory()->create(['user_id' => $user->id]);
     $this->actingAs($user);
 
     $purchaseData = [
