@@ -117,10 +117,10 @@ php artisan storage:link
 ```bash
 
 # .envにDB接続情報の設定
-- **DB_DATABASE**: laravel_db
-- **DB_USERNAME**: laravel_user
-- **DB_PASSWORD**: laravel_pass
-- **DB_HOST**: mysql #（コンテナ間通信）
+DB_DATABASE=laravel_db
+DB_USERNAME=laravel_user
+DB_PASSWORD=laravel_pass
+DB_HOST=mysql #（コンテナ間通信）
 
 # データベースマイグレーションとシーダーの実行
 php artisan migrate:fresh --seed
