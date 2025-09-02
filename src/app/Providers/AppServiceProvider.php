@@ -40,8 +40,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(LikeRepositoryInterface::class, EloquentLikeRepository::class);
         $this->app->bind(PurchaseRepositoryInterface::class, EloquentPurchaseRepository::class);
         $this->app->bind(ItemCategoryRepositoryInterface::class, EloquentItemCategoryRepository::class);
-        
-        // ServiceInterfaceの実装クラスを登録
         $this->app->bind(FileUploadServiceInterface::class, FileUploadService::class);
     }
 

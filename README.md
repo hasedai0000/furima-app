@@ -110,6 +110,9 @@ php artisan key:generate
 # 画像保存のためシンボリックリンクを作成する
 php artisan storage:link
 
+# データベースマイグレーションとシーダーの実行
+php artisan migrate:fresh --seed
+
 ```
 
 #### 3.1 データベース接続情報
@@ -235,11 +238,8 @@ php artisan migrate
 # シーダーの実行
 php artisan db:seed
 
-# コード品質チェック
-composer run-script quality
-
 # テストの実行
-composer run-script test
+docker compose exec php php artisan test
 ```
 
 ## CI/CD
