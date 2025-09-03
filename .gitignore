@@ -1,5 +1,5 @@
 # cursor関連
-.cursor/*
+.cursor
 
 # Docker関連
 docker/mysql/data/
