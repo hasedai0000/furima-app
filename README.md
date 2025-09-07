@@ -238,7 +238,13 @@ php artisan migrate
 # シーダーの実行
 php artisan db:seed
 
-# テストの実行
+# テスト用のDBを作成
+docker compose exec mysql mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS furima_test;"
+
+# マイグレーション
+docker compose exec php php artisan migrate --env=testing
+
+# テストを実行
 docker compose exec php php artisan test
 ```
 
