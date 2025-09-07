@@ -10,6 +10,17 @@
 -   各テスト後にトランザクションロールバックでデータをクリーンアップ
 -   本番の`furima`データベースに影響を与えない
 
+```bash
+// テスト用のDBを作成
+docker compose exec mysql mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS furima_test;"
+
+// マイグレーション
+docker compose exec php php artisan migrate --env=testing
+
+// テストを実行
+docker compose exec php php artisan test
+```
+
 ### 2. トランザクションベーステスト
 
 -   各テストメソッドの開始時にトランザクションを開始
