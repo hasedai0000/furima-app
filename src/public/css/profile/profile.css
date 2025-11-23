@@ -37,6 +37,41 @@
     margin-bottom: 40px;
 }
 
+.profile-rating {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.profile-rating__label {
+    font-size: 14px;
+    color: #666;
+    margin-right: 10px;
+}
+
+.profile-rating__value {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.profile-rating__star {
+    color: #ddd;
+    font-size: 18px;
+}
+
+.profile-rating__star--filled {
+    color: #ffd700;
+    font-size: 18px;
+}
+
+.profile-rating__number {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-left: 5px;
+}
+
 .profile-image__preview {
     width: 120px;
     height: 120px;

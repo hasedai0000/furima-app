@@ -6,6 +6,8 @@ use App\Domain\Purchase\Entities\Purchase as PurchaseEntity;
 use App\Domain\Purchase\Repositories\PurchaseRepositoryInterface;
 use App\Domain\Purchase\ValueObjects\PurchasePostCode;
 use App\Domain\Purchase\ValueObjects\PaymentMethod;
+use App\Domain\Transaction\Entities\Transaction as TransactionEntity;
+use App\Domain\Transaction\Repositories\TransactionRepositoryInterface;
 use App\Application\Services\ItemService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -17,13 +19,16 @@ use Stripe\Exception\ApiErrorException;
 class PurchaseService
 {
     private PurchaseRepositoryInterface $purchaseRepository;
+    private TransactionRepositoryInterface $transactionRepository;
     private ItemService $itemService;
 
     public function __construct(
         PurchaseRepositoryInterface $purchaseRepository,
+        TransactionRepositoryInterface $transactionRepository,
         ItemService $itemService
     ) {
         $this->purchaseRepository = $purchaseRepository;
+        $this->transactionRepository = $transactionRepository;
         $this->itemService = $itemService;
     }
 
@@ -95,6 +100,17 @@ class PurchaseService
         );
 
         $this->purchaseRepository->settlement($purchase);
+
+        // 取引（Transaction）を自動作成
+        $item = $this->itemService->getItem($itemId);
+        $transaction = new TransactionEntity(
+            Str::uuid()->toString(),
+            $itemId,
+            Auth::user()->id, // buyer_id
+            $item['userId'], // seller_id
+            'active'
+        );
+        $this->transactionRepository->save($transaction);
 
         return $purchase;
     }

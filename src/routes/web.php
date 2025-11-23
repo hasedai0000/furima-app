@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -66,6 +67,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Stripe Checkout関連
     Route::get('/purchase/{item_id}/stripe-checkout', [PurchaseController::class, 'stripeCheckout'])->name('purchase.stripe-checkout');
     Route::get('/purchase/{item_id}/success', [PurchaseController::class, 'checkoutSuccess'])->name('purchase.success');
+
+    // 取引チャット関連
+    Route::get('/transactions/{transaction_id}', [TransactionController::class, 'show'])->name('transactions.show');
+    Route::post('/transactions/{transaction_id}/messages', [TransactionController::class, 'sendMessage'])->name('transactions.sendMessage');
+    Route::put('/transactions/{transaction_id}/messages/{message_id}', [TransactionController::class, 'updateMessage'])->name('transactions.updateMessage');
+    Route::delete('/transactions/{transaction_id}/messages/{message_id}', [TransactionController::class, 'deleteMessage'])->name('transactions.deleteMessage');
+    Route::post('/transactions/{transaction_id}/complete', [TransactionController::class, 'complete'])->name('transactions.complete');
+    Route::post('/transactions/{transaction_id}/ratings', [TransactionController::class, 'submitRating'])->name('transactions.submitRating');
 });
 
 // Item関連ルート（認証不要）

@@ -45,7 +45,7 @@
       @if (Auth::check() && Auth::user()->hasVerifiedEmail())
         <div class="items__tabs">
           @php
-            $currentTab = request('page', 'sell');
+            $currentTab = $currentTab ?? request('page', 'sell');
             $searchParams = $searchTerm ? ['search' => $searchTerm] : [];
           @endphp
 
@@ -57,10 +57,14 @@
             class="items__tab {{ $currentTab === 'buy' ? 'items__tab--active' : '' }}">
             購入した商品
           </a>
+          <a href="{{ route('mypage.index', array_merge(['page' => 'transaction'], $searchParams)) }}"
+            class="items__tab {{ $currentTab === 'transaction' ? 'items__tab--active' : '' }}">
+            取引中の商品
+          </a>
         </div>
       @endif
 
-      @if ($searchTerm)
+      @if ($searchTerm && $currentTab !== 'transaction')
         <div class="search-results">
           @php
             $tabLabel = $currentTab === 'sell' ? '出品した商品' : '購入した商品';
@@ -81,24 +85,54 @@
         </div>
       @endif
 
-      <div class="items__grid">
-        @foreach ($items as $item)
-          <a href="{{ route('items.detail', $item['id']) }}">
-            <div class="item-card">
-              <div class="item-card__image">
-                <img src="{{ $item['imgUrl'] }}" alt="{{ $item['name'] }}" class="item-card__img">
-                @if ($item['isSold'])
-                  <div class="item-card__sold">
-                    <span class="sold-label">SOLD</span>
+      @if ($currentTab === 'transaction')
+        <!-- 取引中の商品一覧 -->
+        @if (isset($transactions) && count($transactions) > 0)
+          <div class="items__grid">
+            @foreach ($transactions as $txData)
+              <a href="{{ route('transactions.show', ['transaction_id' => $txData['transaction']['id']]) }}">
+                <div class="item-card">
+                  <div class="item-card__image">
+                    <img src="{{ asset($txData['item']['imgUrl']) }}" alt="{{ $txData['item']['name'] }}"
+                      class="item-card__img">
+                    @if ($txData['unreadCount'] > 0)
+                      <div class="item-card__badge">
+                        <span class="item-card__badge-text">{{ $txData['unreadCount'] }}</span>
+                      </div>
+                    @endif
                   </div>
-                @endif
+                  <div class="item-card__name">{{ $txData['item']['name'] }}</div>
+                  <div class="item-card__price">¥{{ number_format($txData['item']['price']) }}</div>
+                </div>
+              </a>
+            @endforeach
+          </div>
+        @else
+          <div class="search-results__empty">
+            <p>取引中の商品はありません。</p>
+          </div>
+        @endif
+      @else
+        <!-- 出品した商品 / 購入した商品 -->
+        <div class="items__grid">
+          @foreach ($items as $item)
+            <a href="{{ route('items.detail', $item['id']) }}">
+              <div class="item-card">
+                <div class="item-card__image">
+                  <img src="{{ $item['imgUrl'] }}" alt="{{ $item['name'] }}" class="item-card__img">
+                  @if ($item['isSold'])
+                    <div class="item-card__sold">
+                      <span class="sold-label">SOLD</span>
+                    </div>
+                  @endif
+                </div>
+                <div class="item-card__name">{{ $item['name'] }}</div>
+                <div class="item-card__price">¥{{ number_format($item['price']) }}</div>
               </div>
-              <div class="item-card__name">{{ $item['name'] }}</div>
-              <div class="item-card__price">¥{{ number_format($item['price']) }}</div>
-            </div>
-          </a>
-        @endforeach
-      </div>
+            </a>
+          @endforeach
+        </div>
+      @endif
     </div>
   </div>
 @endsection

@@ -6,6 +6,8 @@ use App\Application\Services\AuthenticationService;
 use App\Application\Services\FileUploadService;
 use App\Application\Services\ItemService;
 use App\Application\Services\ProfileService;
+use App\Application\Services\RatingService;
+use App\Application\Services\TransactionService;
 use App\Application\Services\UserService;
 use App\Http\Requests\Profile\AddressUpdateRequest;
 use App\Http\Requests\Profile\ProfileStoreRequest;
@@ -20,19 +22,25 @@ class ProfileController extends Controller
     private UserService $userService;
     private FileUploadService $fileUploadService;
     private AuthenticationService $authService;
+    private TransactionService $transactionService;
+    private RatingService $ratingService;
 
     public function __construct(
         AuthenticationService $authService,
         ItemService $itemService,
         ProfileService $profileService,
         UserService $userService,
-        FileUploadService $fileUploadService
+        FileUploadService $fileUploadService,
+        TransactionService $transactionService,
+        RatingService $ratingService
     ) {
         $this->authService = $authService;
         $this->itemService = $itemService;
         $this->profileService = $profileService;
         $this->userService = $userService;
         $this->fileUploadService = $fileUploadService;
+        $this->transactionService = $transactionService;
+        $this->ratingService = $ratingService;
     }
 
     public function index(Request $request): mixed
@@ -43,17 +51,70 @@ class ProfileController extends Controller
         if (!$this->authService->isAuthenticated()) {
             return redirect()->route('login');
         }
-        // クエリパラメータでpage=buyの場合はマイリストを表示
-        if ($request->query('page') === 'sell') {
+
+        $currentTab = $request->query('page', 'sell');
+        $items = [];
+        $transactions = [];
+
+        // クエリパラメータでpage=buyの場合は購入した商品を表示
+        if ($currentTab === 'sell') {
             $items = $this->itemService->getMySellItems($searchTerm);
-        } else {
+        } elseif ($currentTab === 'buy') {
             $items = $this->itemService->getMyBuyItems($searchTerm);
+        } elseif ($currentTab === 'transaction') {
+            // 取引中の商品を取得
+            $userTransactions = $this->transactionService->getUserTransactions();
+            $transactions = [];
+            foreach ($userTransactions as $tx) {
+                $txItem = $this->itemService->getItem($tx->getItemId());
+                // 未読メッセージ数を取得
+                $unreadCount = $this->getUnreadMessageCount($tx->getId(), auth()->id());
+                $transactions[] = [
+                    'transaction' => $tx->toArray(),
+                    'item' => $txItem,
+                    'unreadCount' => $unreadCount,
+                ];
+            }
+            // 新規メッセージが来た順にソート（未読数が多い順、その後更新日時順）
+            usort($transactions, function ($a, $b) {
+                if ($a['unreadCount'] !== $b['unreadCount']) {
+                    return $b['unreadCount'] <=> $a['unreadCount'];
+                }
+                return strtotime($b['transaction']['updatedAt'] ?? '') <=> strtotime($a['transaction']['updatedAt'] ?? '');
+            });
         }
 
         $profileEntity = $this->profileService->getProfile(auth()->id());
         $profile = $profileEntity ? $profileEntity->toArray() : null;
 
-        return view('mypage.index', compact('items', 'searchTerm', 'profile'));
+        return view('mypage.index', compact('items', 'transactions', 'searchTerm', 'profile', 'currentTab'));
+    }
+
+    /**
+     * 未読メッセージ数を取得
+     *
+     * @param string $transactionId
+     * @param string $userId
+     * @return int
+     */
+    private function getUnreadMessageCount(string $transactionId, string $userId): int
+    {
+        $messages = \App\Models\Message::where('transaction_id', $transactionId)
+            ->where('user_id', '!=', $userId)
+            ->whereNull('deleted_at')
+            ->get();
+
+        $unreadCount = 0;
+        foreach ($messages as $message) {
+            $read = \App\Models\MessageRead::where('message_id', $message->id)
+                ->where('user_id', $userId)
+                ->exists();
+            if (!$read) {
+                $unreadCount++;
+            }
+        }
+
+        return $unreadCount;
     }
 
     /**
@@ -68,6 +129,7 @@ class ProfileController extends Controller
         try {
             $user = $this->userService->getUser($userId);
             $profile = $this->profileService->getProfile($userId);
+            $averageRating = $this->ratingService->getAverageRating($userId);
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }
@@ -75,6 +137,7 @@ class ProfileController extends Controller
         return view('mypage.profile', [
             'name' => $user->getName(),
             'profile' => $profile ? $profile->toArray() : null,
+            'averageRating' => $averageRating,
         ]);
     }
 
