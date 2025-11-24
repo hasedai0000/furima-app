@@ -58,8 +58,11 @@
             購入した商品
           </a>
           <a href="{{ route('mypage.index', array_merge(['page' => 'transaction'], $searchParams)) }}"
-            class="items__tab {{ $currentTab === 'transaction' ? 'items__tab--active' : '' }}">
+            class="items__tab {{ $currentTab === 'transaction' ? 'items__tab--active transaction-tab' : '' }}">
             取引中の商品
+            @if (isset($transactionUnreadCount) && $transactionUnreadCount > 0)
+              <span class="transaction-tab__badge">{{ $transactionUnreadCount }}</span>
+            @endif
           </a>
         </div>
       @endif

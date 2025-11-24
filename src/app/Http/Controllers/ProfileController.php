@@ -66,6 +66,7 @@ class ProfileController extends Controller
             // 取引中の商品を取得（取引IDが紐づいていて、取引が完了していない）
             $userTransactions = $this->transactionService->getUserTransactions();
             $transactions = [];
+            $totalUnreadCount = 0;
 
             // 完了していない取引のみをフィルタリング
             foreach ($userTransactions as $tx) {
@@ -80,6 +81,7 @@ class ProfileController extends Controller
 
                     // 未読メッセージ数を取得
                     $unreadCount = $this->getUnreadMessageCount($tx->getId(), auth()->id());
+                    $totalUnreadCount += $unreadCount;
                     $transactions[] = [
                         'transaction' => $tx->toArray(),
                         'item' => $txItem,
@@ -102,7 +104,23 @@ class ProfileController extends Controller
         $profileEntity = $this->profileService->getProfile(auth()->id());
         $profile = $profileEntity ? $profileEntity->toArray() : null;
 
-        return view('mypage.index', compact('items', 'transactions', 'searchTerm', 'profile', 'currentTab'));
+        // 取引中の商品タブの未読メッセージ数の合計を計算
+        $transactionUnreadCount = 0;
+        if ($currentTab === 'transaction' && isset($transactions)) {
+            foreach ($transactions as $txData) {
+                $transactionUnreadCount += $txData['unreadCount'];
+            }
+        } else {
+            // 取引中の商品タブがアクティブでない場合でも、未読数を計算
+            $userTransactions = $this->transactionService->getUserTransactions();
+            foreach ($userTransactions as $tx) {
+                if ($tx->getStatus() !== 'completed') {
+                    $transactionUnreadCount += $this->getUnreadMessageCount($tx->getId(), auth()->id());
+                }
+            }
+        }
+
+        return view('mypage.index', compact('items', 'transactions', 'searchTerm', 'profile', 'currentTab', 'transactionUnreadCount'));
     }
 
     /**
