@@ -91,6 +91,34 @@ class ItemService
   }
 
   /**
+   * 取引が完了した商品を取得（購入した商品）
+   *
+   * @param string $searchTerm
+   * @return array
+   */
+  public function getMyCompletedBuyItems(string $searchTerm): array
+  {
+    $userId = $this->authService->requireAuthentication();
+    $items = $this->itemRepository->findMyCompletedBuyItems($userId, $searchTerm);
+
+    return ItemTransformer::transformItems($items);
+  }
+
+  /**
+   * 取引中の商品を取得（購入はしているが取引が完了していない）
+   *
+   * @param string $searchTerm
+   * @return array
+   */
+  public function getMyActiveTransactions(string $searchTerm): array
+  {
+    $userId = $this->authService->requireAuthentication();
+    $items = $this->itemRepository->findMyActiveTransactions($userId, $searchTerm);
+
+    return ItemTransformer::transformItems($items);
+  }
+
+  /**
    * 商品詳細を取得
    *
    * @param string $id

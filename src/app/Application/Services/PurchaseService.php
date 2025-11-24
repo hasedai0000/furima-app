@@ -84,8 +84,9 @@ class PurchaseService
      * @param string $address
      * @param string|null $buildingName
      * @param string|null $paymentIntentId Stripe決済の場合のPayment Intent ID
+     * @return array ['purchase' => PurchaseEntity, 'transactionId' => string]
      */
-    public function completePurchase(string $itemId, string $paymentMethod, string $postcode, string $address, ?string $buildingName): PurchaseEntity
+    public function completePurchase(string $itemId, string $paymentMethod, string $postcode, string $address, ?string $buildingName): array
     {
         $purchasePostcode = new PurchasePostCode($postcode);
 
@@ -112,6 +113,9 @@ class PurchaseService
         );
         $this->transactionRepository->save($transaction);
 
-        return $purchase;
+        return [
+            'purchase' => $purchase,
+            'transactionId' => $transaction->getId(),
+        ];
     }
 }

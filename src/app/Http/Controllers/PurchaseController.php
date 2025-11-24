@@ -99,7 +99,7 @@ class PurchaseController extends Controller
 
             $profile = $profileEntity->toArray();
 
-            $this->purchaseService->completePurchase(
+            $result = $this->purchaseService->completePurchase(
                 $itemId,
                 PaymentMethod::CREDIT_CARD,
                 $profile['postcode'],
@@ -107,7 +107,7 @@ class PurchaseController extends Controller
                 $profile['buildingName']
             );
 
-            return redirect()->route('items.detail', $itemId)
+            return redirect()->route('transactions.show', ['transaction_id' => $result['transactionId']])
                 ->with('success', '購入が完了しました');
         } catch (\Exception $e) {
             return redirect()->route('items.detail', $itemId)
@@ -122,7 +122,7 @@ class PurchaseController extends Controller
             $validatedData = $request->validated();
 
             // リクエストから住所情報を取得してPurchaseテーブルに保存
-            $this->purchaseService->completePurchase(
+            $result = $this->purchaseService->completePurchase(
                 $itemId,
                 $validatedData['payment_method'],
                 $validatedData['postcode'],
@@ -130,7 +130,8 @@ class PurchaseController extends Controller
                 $validatedData['buildingName']
             );
 
-            return redirect()->route('items.detail', $itemId)->with('success', '購入が完了しました');
+            return redirect()->route('transactions.show', ['transaction_id' => $result['transactionId']])
+                ->with('success', '購入が完了しました');
         } catch (\Exception $e) {
             return redirect()->route('items.detail', $itemId)->with('error', $e->getMessage());
         }

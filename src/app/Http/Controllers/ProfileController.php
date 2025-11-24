@@ -56,31 +56,46 @@ class ProfileController extends Controller
         $items = [];
         $transactions = [];
 
-        // クエリパラメータでpage=buyの場合は購入した商品を表示
+        // クエリパラメータでpage=buyの場合は購入した商品（取引完了）を表示
         if ($currentTab === 'sell') {
             $items = $this->itemService->getMySellItems($searchTerm);
         } elseif ($currentTab === 'buy') {
-            $items = $this->itemService->getMyBuyItems($searchTerm);
+            // 取引が完了した商品を表示
+            $items = $this->itemService->getMyCompletedBuyItems($searchTerm);
         } elseif ($currentTab === 'transaction') {
-            // 取引中の商品を取得
+            // 取引中の商品を取得（取引IDが紐づいていて、取引が完了していない）
             $userTransactions = $this->transactionService->getUserTransactions();
             $transactions = [];
+
+            // 完了していない取引のみをフィルタリング
             foreach ($userTransactions as $tx) {
-                $txItem = $this->itemService->getItem($tx->getItemId());
-                // 未読メッセージ数を取得
-                $unreadCount = $this->getUnreadMessageCount($tx->getId(), auth()->id());
-                $transactions[] = [
-                    'transaction' => $tx->toArray(),
-                    'item' => $txItem,
-                    'unreadCount' => $unreadCount,
-                ];
+                if ($tx->getStatus() !== 'completed') {
+                    // 商品情報を取得
+                    $txItem = $this->itemService->getItem($tx->getItemId());
+
+                    // 検索キーワードでフィルタリング
+                    if ($searchTerm && stripos($txItem['name'], $searchTerm) === false) {
+                        continue;
+                    }
+
+                    // 未読メッセージ数を取得
+                    $unreadCount = $this->getUnreadMessageCount($tx->getId(), auth()->id());
+                    $transactions[] = [
+                        'transaction' => $tx->toArray(),
+                        'item' => $txItem,
+                        'unreadCount' => $unreadCount,
+                    ];
+                }
             }
+
             // 新規メッセージが来た順にソート（未読数が多い順、その後更新日時順）
             usort($transactions, function ($a, $b) {
                 if ($a['unreadCount'] !== $b['unreadCount']) {
                     return $b['unreadCount'] <=> $a['unreadCount'];
                 }
-                return strtotime($b['transaction']['updatedAt'] ?? '') <=> strtotime($a['transaction']['updatedAt'] ?? '');
+                $aUpdatedAt = $a['transaction']['updatedAt'] ?? '';
+                $bUpdatedAt = $b['transaction']['updatedAt'] ?? '';
+                return strtotime($bUpdatedAt) <=> strtotime($aUpdatedAt);
             });
         }
 
