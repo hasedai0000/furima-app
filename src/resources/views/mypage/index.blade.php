@@ -31,7 +31,7 @@
         </div>
         <div class="profile__details">
           <h2 class="profile__username">
-            {{ Auth::user()->profile && Auth::user()->profile->name ? Auth::user()->profile->name : 'ユーザー名' }}
+            {{ $userName ?? (Auth::user()->name ?? 'ユーザー名') }}
           </h2>
         </div>
       </div>

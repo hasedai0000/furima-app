@@ -31,4 +31,12 @@ interface TransactionRepositoryInterface
    * @return void
    */
   public function update(TransactionEntity $transaction): void;
+
+  /**
+   * 商品IDでアクティブな取引を取得
+   *
+   * @param string $itemId
+   * @return TransactionEntity|null
+   */
+  public function findActiveByItemId(string $itemId): ?TransactionEntity;
 }

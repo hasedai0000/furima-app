@@ -61,9 +61,12 @@ class TransactionController extends Controller
         return $message->toArray();
       }, $messages);
       $isBuyer = $transaction->getBuyerId() === $userId;
-      $otherUser = $isBuyer
-        ? ['id' => $transaction->getSellerId()]
-        : ['id' => $transaction->getBuyerId()];
+      $otherUserId = $isBuyer ? $transaction->getSellerId() : $transaction->getBuyerId();
+      $otherUserModel = \App\Models\User::find($otherUserId);
+      $otherUser = [
+        'id' => $otherUserId,
+        'name' => $otherUserModel ? $otherUserModel->name : 'ユーザー名',
+      ];
 
       // 取引一覧を取得（サイドバー用）
       $userTransactions = $this->transactionService->getUserTransactions();

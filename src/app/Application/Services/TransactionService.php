@@ -102,4 +102,16 @@ class TransactionService
 
     return $transaction;
   }
+
+  /**
+   * 商品IDでアクティブな取引があるかチェック
+   *
+   * @param string $itemId
+   * @return bool
+   */
+  public function hasActiveTransaction(string $itemId): bool
+  {
+    $transaction = $this->transactionRepository->findActiveByItemId($itemId);
+    return $transaction !== null;
+  }
 }

@@ -64,7 +64,7 @@
 
         <!-- 購入ボタン -->
         <div class="item-detail__purchase">
-          @if ($item['isSold'])
+          @if ($item['isSold'] || $hasActiveTransaction)
             <button class="item-detail__purchase-button" disabled>購入手続きへ</button>
           @else
             <a href="{{ route('purchase.procedure', ['item_id' => $item['id']]) }}">

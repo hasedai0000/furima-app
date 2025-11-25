@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Application\Contracts\FileUploadServiceInterface;
 use App\Application\Services\AuthenticationService;
 use App\Application\Services\ItemService;
+use App\Application\Services\TransactionService;
 use App\Domain\Item\Services\CategoryService;
 use App\Domain\Item\Services\CommentService;
 use App\Domain\Item\Services\LikeService;
@@ -24,6 +25,7 @@ class ItemController extends Controller
     private CategoryService $categoryService;
     private FileUploadServiceInterface $fileUploadService;
     private AuthenticationService $authService;
+    private TransactionService $transactionService;
 
     public function __construct(
         ItemService $itemService,
@@ -31,7 +33,8 @@ class ItemController extends Controller
         LikeService $likeService,
         CategoryService $categoryService,
         FileUploadServiceInterface $fileUploadService,
-        AuthenticationService $authService
+        AuthenticationService $authService,
+        TransactionService $transactionService
     ) {
         $this->itemService = $itemService;
         $this->commentService = $commentService;
@@ -39,6 +42,7 @@ class ItemController extends Controller
         $this->categoryService = $categoryService;
         $this->fileUploadService = $fileUploadService;
         $this->authService = $authService;
+        $this->transactionService = $transactionService;
     }
 
     public function index(Request $request): mixed
@@ -66,8 +70,9 @@ class ItemController extends Controller
     public function detail(string $id): View
     {
         $item = $this->itemService->getItemWithLikeStatus($id);
+        $hasActiveTransaction = $this->transactionService->hasActiveTransaction($id);
 
-        return view('items.detail', compact('item'));
+        return view('items.detail', compact('item', 'hasActiveTransaction'));
     }
 
     public function comment(ItemCommentRequest $request, string $item_id): RedirectResponse

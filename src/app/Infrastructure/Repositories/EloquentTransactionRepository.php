@@ -80,6 +80,25 @@ class EloquentTransactionRepository implements TransactionRepositoryInterface
   }
 
   /**
+   * 商品IDでアクティブな取引を取得
+   *
+   * @param string $itemId
+   * @return TransactionEntity|null
+   */
+  public function findActiveByItemId(string $itemId): ?TransactionEntity
+  {
+    $transaction = Transaction::where('item_id', $itemId)
+      ->where('status', 'active')
+      ->first();
+
+    if (!$transaction) {
+      return null;
+    }
+
+    return $this->toEntity($transaction);
+  }
+
+  /**
    * Eloquentモデルをエンティティに変換
    *
    * @param Transaction $transaction

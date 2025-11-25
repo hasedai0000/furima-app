@@ -19,7 +19,7 @@
   <div class="chat-container">
     <!-- サイドバー：取引一覧 -->
     <div class="chat-sidebar">
-      <h2 class="chat-sidebar__title">取引中の商品</h2>
+      <h2 class="chat-sidebar__title">その他の取引</h2>
       <div class="chat-sidebar__list">
         @foreach ($transactions as $txData)
           <a href="{{ route('transactions.show', ['transaction_id' => $txData['transaction']['id']]) }}"
@@ -38,23 +38,28 @@
 
     <!-- メインエリア：チャット -->
     <div class="chat-main">
-      <!-- ヘッダー -->
-      <div class="chat-header">
-        <div class="chat-header__item">
-          <img src="{{ asset($item['imgUrl']) }}" alt="{{ $item['name'] }}" class="chat-header__item-image">
-          <div class="chat-header__item-info">
-            <div class="chat-header__item-name">{{ $item['name'] }}</div>
-            <div class="chat-header__item-price">¥{{ number_format($item['price']) }}</div>
-          </div>
-        </div>
+      <!-- タイトル -->
+      <div class="chat-title">
+        <h1 class="chat-title__text">「{{ $otherUser['name'] }}」さんとの取引画面</h1>
         @if ($isBuyer && $transaction['status'] === 'active')
-          <div class="chat-header__actions">
+          <div class="chat-title__actions">
             <form action="{{ route('transactions.complete', ['transaction_id' => $transaction['id']]) }}" method="POST">
               @csrf
-              <button type="submit" class="chat-header__complete-btn">取引を完了する</button>
+              <button type="submit" class="chat-title__complete-btn">取引を完了する</button>
             </form>
           </div>
         @endif
+      </div>
+
+      <!-- 商品情報エリア -->
+      <div class="chat-item-info">
+        <div class="chat-item-info__image">
+          <img src="{{ asset($item['imgUrl']) }}" alt="{{ $item['name'] }}" class="chat-item-info__img">
+        </div>
+        <div class="chat-item-info__details">
+          <div class="chat-item-info__name">{{ $item['name'] }}</div>
+          <div class="chat-item-info__price">¥{{ number_format($item['price']) }}</div>
+        </div>
       </div>
 
       <!-- メッセージ一覧 -->
@@ -135,21 +140,23 @@
               <div class="error-message">{{ $message }}</div>
             @enderror
           </div>
-          <div class="chat-form__input-area">
-            <textarea name="content" id="message-content" class="chat-form__textarea" placeholder="メッセージを入力してください" maxlength="400"></textarea>
-            <div class="chat-form__char-count">
-              <span id="char-count">0</span>/400
+          <div class="chat-form__input-row">
+            <div class="chat-form__input-area">
+              <textarea name="content" id="message-content" class="chat-form__textarea" placeholder="取引メッセージを記入してください"
+                maxlength="400"></textarea>
             </div>
+            <div class="chat-form__image-area">
+              <label for="message-images" class="chat-form__image-label">
+                画像を追加
+              </label>
+              <input type="file" name="images[]" id="message-images" multiple accept="image/jpeg,image/png"
+                class="chat-form__image-input">
+              <div class="chat-form__image-preview" id="image-preview"></div>
+            </div>
+            <button type="submit" class="chat-form__submit">
+              <img src="{{ asset('images/Input Button.svg') }}" alt="送信" class="chat-form__submit-icon">
+            </button>
           </div>
-          <div class="chat-form__image-area">
-            <label for="message-images" class="chat-form__image-label">
-              <i class="fas fa-image"></i> 画像を追加
-            </label>
-            <input type="file" name="images[]" id="message-images" multiple accept="image/jpeg,image/png"
-              class="chat-form__image-input">
-            <div class="chat-form__image-preview" id="image-preview"></div>
-          </div>
-          <button type="submit" class="chat-form__submit">送信</button>
         </form>
       </div>
     </div>
@@ -160,30 +167,32 @@
     <div class="rating-modal" id="rating-modal">
       <div class="rating-modal__overlay" onclick="closeRatingModal()"></div>
       <div class="rating-modal__content">
-        <h2 class="rating-modal__title">取引を評価する</h2>
+        <h2 class="rating-modal__title">取引が完了しました。</h2>
+        <div class="rating-modal__divider"></div>
+        <p class="rating-modal__question">今回の取引相手はどうでしたか？</p>
         <form action="{{ route('transactions.submitRating', ['transaction_id' => $transaction['id']]) }}"
-          method="POST">
+          method="POST" class="rating-modal__form">
           @csrf
           <input type="hidden" name="rated_id" value="{{ $otherUser['id'] }}">
-          <div class="rating-modal__rating">
-            <label class="rating-modal__label">評価</label>
+          <div class="rating-modal__stars-container">
             <div class="rating-modal__stars">
-              @for ($i = 5; $i >= 1; $i--)
+              @for ($i = 1; $i <= 5; $i++)
                 <input type="radio" name="rating" id="rating-{{ $i }}" value="{{ $i }}"
-                  {{ $i === 5 ? 'checked' : '' }}>
+                  {{ $i === 3 ? 'checked' : '' }}>
                 <label for="rating-{{ $i }}" class="rating-modal__star">
-                  <i class="fas fa-star"></i>
+                  <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M50 0L61.8 35.2L100 40.5L72.5 66.8L79.4 105L50 85.5L20.6 105L27.5 66.8L0 40.5L38.2 35.2L50 0Z"
+                      fill="currentColor" />
+                  </svg>
                 </label>
               @endfor
             </div>
           </div>
-          <div class="rating-modal__comment">
-            <label class="rating-modal__label" for="rating-comment">コメント（任意）</label>
-            <textarea name="comment" id="rating-comment" class="rating-modal__textarea" placeholder="コメントを入力してください"
-              maxlength="500"></textarea>
-          </div>
+          <div class="rating-modal__divider"></div>
           <div class="rating-modal__actions">
-            <button type="submit" class="rating-modal__submit">評価を送信</button>
+            <button type="submit" class="rating-modal__submit">送信する</button>
           </div>
         </form>
       </div>
@@ -191,11 +200,7 @@
   @endif
 
   <script>
-    // 文字数カウント
-    document.getElementById('message-content').addEventListener('input', function() {
-      const count = this.value.length;
-      document.getElementById('char-count').textContent = count;
-    });
+    // 文字数カウント（削除：Figmaデザインに表示なし）
 
     // 画像プレビュー
     document.getElementById('message-images').addEventListener('change', function(e) {
@@ -285,12 +290,46 @@
       }
     }
 
+    // 星評価の更新
+    function updateStarRating(selectedValue) {
+      const stars = document.querySelectorAll('.rating-modal__star');
+      stars.forEach((star, index) => {
+        const starValue = index + 1;
+        if (starValue <= selectedValue) {
+          star.style.color = '#FFF048';
+        } else {
+          star.style.color = '#D9D9D9';
+        }
+      });
+    }
+
+    // 星評価のイベントリスナー
+    document.addEventListener('DOMContentLoaded', function() {
+      const ratingInputs = document.querySelectorAll('.rating-modal__stars input[type="radio"]');
+      ratingInputs.forEach(input => {
+        input.addEventListener('change', function() {
+          updateStarRating(parseInt(this.value));
+        });
+      });
+
+      // 初期状態を設定（デフォルトで3が選択されている場合）
+      const defaultRating = document.querySelector('.rating-modal__stars input[type="radio"]:checked');
+      if (defaultRating) {
+        updateStarRating(parseInt(defaultRating.value));
+      }
+    });
+
     // ページ読み込み時に評価モーダルを表示
     @if ($showRatingModal)
       window.addEventListener('load', function() {
         const modal = document.getElementById('rating-modal');
         if (modal) {
           modal.style.display = 'flex';
+          // モーダル表示時に星評価を初期化
+          const defaultRating = document.querySelector('.rating-modal__stars input[type="radio"]:checked');
+          if (defaultRating) {
+            updateStarRating(parseInt(defaultRating.value));
+          }
         }
       });
     @endif

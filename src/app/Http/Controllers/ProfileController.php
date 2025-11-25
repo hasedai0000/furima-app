@@ -104,6 +104,10 @@ class ProfileController extends Controller
         $profileEntity = $this->profileService->getProfile(auth()->id());
         $profile = $profileEntity ? $profileEntity->toArray() : null;
 
+        // ユーザー情報を取得
+        $userEntity = $this->userService->getUser(auth()->id());
+        $userName = $userEntity ? $userEntity->getName() : 'ユーザー名';
+
         // 取引中の商品タブの未読メッセージ数の合計を計算
         $transactionUnreadCount = 0;
         if ($currentTab === 'transaction' && isset($transactions)) {
@@ -120,7 +124,7 @@ class ProfileController extends Controller
             }
         }
 
-        return view('mypage.index', compact('items', 'transactions', 'searchTerm', 'profile', 'currentTab', 'transactionUnreadCount'));
+        return view('mypage.index', compact('items', 'transactions', 'searchTerm', 'profile', 'currentTab', 'transactionUnreadCount', 'userName'));
     }
 
     /**

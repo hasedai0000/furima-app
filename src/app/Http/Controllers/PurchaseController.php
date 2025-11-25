@@ -6,6 +6,7 @@ use App\Application\Services\AuthenticationService;
 use App\Application\Services\ItemService;
 use App\Application\Services\ProfileService;
 use App\Application\Services\PurchaseService;
+use App\Application\Services\TransactionService;
 use App\Http\Requests\Purchase\PurchaseRequest;
 use App\Domain\Purchase\ValueObjects\PaymentMethod;
 use Illuminate\Http\RedirectResponse;
@@ -20,21 +21,30 @@ class PurchaseController extends Controller
     private ProfileService $profileService;
     private PurchaseService $purchaseService;
     private AuthenticationService $authService;
+    private TransactionService $transactionService;
 
     public function __construct(
         ItemService $itemService,
         ProfileService $profileService,
         PurchaseService $purchaseService,
-        AuthenticationService $authService
+        AuthenticationService $authService,
+        TransactionService $transactionService
     ) {
         $this->itemService = $itemService;
         $this->profileService = $profileService;
         $this->purchaseService = $purchaseService;
         $this->authService = $authService;
+        $this->transactionService = $transactionService;
     }
 
-    public function procedure(string $id): View
+    public function procedure(string $id): mixed
     {
+        // アクティブな取引がある場合は購入手続きを拒否
+        if ($this->transactionService->hasActiveTransaction($id)) {
+            return redirect()->route('items.detail', $id)
+                ->with('error', 'この商品は現在取引中のため、購入手続きを進めることができません。');
+        }
+
         $item = $this->itemService->getItem($id);
         $paymentMethods = PaymentMethod::getOptions();
         $userId = $this->authService->requireAuthentication();
@@ -59,6 +69,12 @@ class PurchaseController extends Controller
     public function stripeCheckout(string $itemId): RedirectResponse
     {
         try {
+            // アクティブな取引がある場合は購入手続きを拒否
+            if ($this->transactionService->hasActiveTransaction($itemId)) {
+                return redirect()->route('items.detail', $itemId)
+                    ->with('error', 'この商品は現在取引中のため、購入手続きを進めることができません。');
+            }
+
             $item = $this->itemService->getItem($itemId);
             $checkoutUrl = $this->purchaseService->createCheckoutSession($item);
 
@@ -75,6 +91,12 @@ class PurchaseController extends Controller
     public function checkoutSuccess(Request $request, string $itemId): RedirectResponse
     {
         try {
+            // アクティブな取引がある場合は購入手続きを拒否
+            if ($this->transactionService->hasActiveTransaction($itemId)) {
+                return redirect()->route('items.detail', $itemId)
+                    ->with('error', 'この商品は現在取引中のため、購入手続きを進めることができません。');
+            }
+
             $sessionId = $request->query('session_id');
 
             if (!$sessionId) {
@@ -118,6 +140,12 @@ class PurchaseController extends Controller
     public function purchase(PurchaseRequest $request, string $itemId): RedirectResponse
     {
         try {
+            // アクティブな取引がある場合は購入手続きを拒否
+            if ($this->transactionService->hasActiveTransaction($itemId)) {
+                return redirect()->route('items.detail', $itemId)
+                    ->with('error', 'この商品は現在取引中のため、購入手続きを進めることができません。');
+            }
+
             // バリデーション
             $validatedData = $request->validated();
 
