@@ -189,7 +189,7 @@ class PurchaseControllerTest extends TestCase
    * checkoutSuccess メソッドの契約テスト
    * 
    * 事前条件: 有効なセッションIDと完了した決済
-   * 事後条件: 購入が完了し、アイテム詳細にリダイレクト
+   * 事後条件: 購入が完了し、取引チャットページにリダイレクト
    * 不変条件: データベースに購入記録が保存される
    */
   public function test_checkout_success_completes_purchase_with_correct_contract()
@@ -272,20 +272,44 @@ class PurchaseControllerTest extends TestCase
    * purchase メソッドの契約テスト
    * 
    * 事前条件: 認証済みユーザーと有効な購入データ
-   * 事後条件: 購入が完了し、アイテム詳細にリダイレクト
+   * 事後条件: 購入が完了し、取引チャットページにリダイレクト
    * 不変条件: データベースに購入記録が保存される
    */
   public function test_purchase_completes_purchase_with_correct_contract()
   {
-    // モックの設定
-    $this->mockPurchaseService();
-
     // 事前条件: 認証済みユーザー、アイテム、プロフィール
     /** @var User $user */
     $user = User::factory()->create();
     $item = Item::factory()->create();
     $profile = Profile::factory()->create(['user_id' => $user->id]);
     $this->actingAs($user);
+
+    // TransactionServiceのモック: hasActiveTransactionはfalseを返す
+    $transactionServiceMock = Mockery::mock(\App\Application\Services\TransactionService::class);
+    $transactionServiceMock->shouldReceive('hasActiveTransaction')
+      ->withAnyArgs()
+      ->andReturn(false);
+    $this->app->instance(\App\Application\Services\TransactionService::class, $transactionServiceMock);
+
+    // ItemServiceのモック: getItemはアイテム情報を返す（任意の引数で呼ばれる可能性があるためany()を使用）
+    $itemServiceMock = Mockery::mock(\App\Application\Services\ItemService::class);
+    $itemServiceMock->shouldReceive('getItem')
+      ->withAnyArgs()
+      ->andReturn($item->toArray());
+    $this->app->instance(\App\Application\Services\ItemService::class, $itemServiceMock);
+
+    // PurchaseServiceのモック: completePurchaseは配列を返す必要がある
+    $transactionId = \Illuminate\Support\Str::uuid()->toString();
+    $mockPurchase = $this->getMockHelper()->createMockPurchase();
+    $purchaseServiceMock = Mockery::mock(\App\Application\Services\PurchaseService::class);
+    $purchaseServiceMock->shouldReceive('completePurchase')
+      ->withAnyArgs()
+      ->once()
+      ->andReturn([
+        'purchase' => $mockPurchase,
+        'transactionId' => $transactionId,
+      ]);
+    $this->app->instance(\App\Application\Services\PurchaseService::class, $purchaseServiceMock);
 
     $purchaseData = [
       'payment_method' => PaymentMethod::CONVENIENCE_STORE,
@@ -298,7 +322,8 @@ class PurchaseControllerTest extends TestCase
     $response = $this->post("/purchase/{$item->id}", $purchaseData);
 
     // 事後条件: 成功メッセージ付きでリダイレクト
-    $response->assertRedirect("/items/{$item->id}");
+    // 実際のコードではtransactions.showにリダイレクトされる
+    $response->assertRedirect(route('transactions.show', ['transaction_id' => $transactionId]));
     $response->assertSessionHas('success', '購入が完了しました');
   }
 
