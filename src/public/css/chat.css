@@ -182,12 +182,23 @@
 
 .chat-message {
     display: flex;
+    flex-direction: column;
     margin-bottom: 20px;
-    align-items: flex-start;
 }
 
-.chat-message--own {
-    flex-direction: row-reverse;
+.chat-message__header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    gap: 10px;
+}
+
+.chat-message--other .chat-message__header {
+    justify-content: flex-start;
+}
+
+.chat-message--own .chat-message__header {
+    justify-content: flex-end;
 }
 
 .chat-message__avatar {
@@ -197,14 +208,6 @@
     overflow: hidden;
     flex-shrink: 0;
     background: #d9d9d9;
-}
-
-.chat-message--own .chat-message__avatar {
-    margin-left: 10px;
-}
-
-.chat-message--other .chat-message__avatar {
-    margin-right: 10px;
 }
 
 .chat-message__avatar img {
@@ -231,30 +234,21 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
+.chat-message--other .chat-message__content {
+    align-self: flex-start;
+}
+
 .chat-message--own .chat-message__content {
+    align-self: flex-end;
     background: #d9d9d9;
     color: #000;
 }
 
-.chat-message__header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-    font-size: 12px;
-}
-
 .chat-message__author {
-    font-weight: 500;
-    margin-right: 8px;
-}
-
-.chat-message__time {
-    color: #5f5f5f;
-    font-size: 11px;
-}
-
-.chat-message--own .chat-message__time {
-    color: #5f5f5f;
+    font-size: 20px;
+    font-weight: 700;
+    color: #000000;
+    line-height: 1.21;
 }
 
 .chat-message__text {
@@ -287,6 +281,10 @@
     font-size: 12px;
 }
 
+.chat-message--own .chat-message__actions {
+    justify-content: flex-end;
+}
+
 .chat-message__action {
     color: #5f5f5f;
     text-decoration: none;
@@ -314,27 +312,21 @@
     width: 100%;
     min-height: 80px;
     padding: 8px;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #5f5f5f;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: 20px;
+    font-weight: 700;
     font-family: inherit;
     resize: vertical;
     box-sizing: border-box;
-}
-
-.chat-message--own .chat-message__edit-textarea {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.3);
-    color: #fff;
+    background: #ffffff;
+    color: #000000;
+    line-height: 1.21;
 }
 
 .chat-message__edit-textarea:focus {
     outline: none;
-    border-color: #2196f3;
-}
-
-.chat-message--own .chat-message__edit-textarea:focus {
-    border-color: rgba(255, 255, 255, 0.5);
+    border-color: #5f5f5f;
 }
 
 .chat-message__edit-actions {
@@ -342,12 +334,19 @@
     gap: 8px;
 }
 
+.chat-message__edit-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
 .chat-message__edit-submit,
 .chat-message__edit-cancel {
-    padding: 6px 12px;
+    padding: 8px 16px;
     border: none;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 16px;
+    font-weight: 400;
     cursor: pointer;
     transition: background-color 0.2s;
 }
@@ -361,30 +360,14 @@
     background: #1976d2;
 }
 
-.chat-message--own .chat-message__edit-submit {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.chat-message--own .chat-message__edit-submit:hover {
-    background: rgba(255, 255, 255, 0.3);
-}
-
 .chat-message__edit-cancel {
     background: #f5f5f5;
     color: #666;
+    border: 1px solid #e0e0e0;
 }
 
 .chat-message__edit-cancel:hover {
     background: #e0e0e0;
-}
-
-.chat-message--own .chat-message__edit-cancel {
-    background: rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.chat-message--own .chat-message__edit-cancel:hover {
-    background: rgba(255, 255, 255, 0.2);
 }
 
 /* メッセージ送信フォーム */
@@ -467,6 +450,7 @@
     flex-wrap: wrap;
     gap: 10px;
     margin-top: 10px;
+    padding-top: 10px;
 }
 
 .chat-form__preview-image {
@@ -513,6 +497,7 @@
     color: #f44336;
     font-size: 14px;
     margin-bottom: 10px;
+    transition: opacity 0.5s ease-out;
 }
 
 /* 成功メッセージ */
@@ -522,6 +507,7 @@
     padding: 12px 20px;
     border-radius: 4px;
     margin-bottom: 20px;
+    transition: opacity 0.5s ease-out;
 }
 
 /* 評価モーダル */

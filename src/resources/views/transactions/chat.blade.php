@@ -71,21 +71,32 @@
             $userProfile = $messageUser->profile;
           @endphp
           <div class="chat-message {{ $isOwnMessage ? 'chat-message--own' : 'chat-message--other' }}">
-            <div class="chat-message__avatar">
-              @if ($userProfile && $userProfile->img_url)
-                <img src="{{ asset($userProfile->img_url) }}" alt="{{ $messageUser->name }}">
-              @else
-                <div class="chat-message__avatar-placeholder">
-                  <span>画像なし</span>
+            <div class="chat-message__header">
+              @if (!$isOwnMessage)
+                <div class="chat-message__avatar">
+                  @if ($userProfile && $userProfile->img_url)
+                    <img src="{{ asset($userProfile->img_url) }}" alt="{{ $messageUser->name }}">
+                  @else
+                    <div class="chat-message__avatar-placeholder">
+                      <span>画像なし</span>
+                    </div>
+                  @endif
+                </div>
+              @endif
+              <span class="chat-message__author">{{ $messageUser->name }}</span>
+              @if ($isOwnMessage)
+                <div class="chat-message__avatar">
+                  @if ($userProfile && $userProfile->img_url)
+                    <img src="{{ asset($userProfile->img_url) }}" alt="{{ $messageUser->name }}">
+                  @else
+                    <div class="chat-message__avatar-placeholder">
+                      <span>画像なし</span>
+                    </div>
+                  @endif
                 </div>
               @endif
             </div>
             <div class="chat-message__content">
-              <div class="chat-message__header">
-                <span class="chat-message__author">{{ $messageUser->name }}</span>
-                <span
-                  class="chat-message__time">{{ \Carbon\Carbon::parse($message['createdAt'])->format('Y/m/d H:i') }}</span>
-              </div>
               @if ($message['content'])
                 <div class="chat-message__text" id="message-text-{{ $message['id'] }}">{{ $message['content'] }}</div>
                 @if ($isOwnMessage)
@@ -116,13 +127,13 @@
                   @endforeach
                 </div>
               @endif
-              @if ($isOwnMessage)
-                <div class="chat-message__actions">
-                  <a href="#" class="chat-message__action" onclick="editMessage('{{ $message['id'] }}')">編集</a>
-                  <a href="#" class="chat-message__action" onclick="deleteMessage('{{ $message['id'] }}')">削除</a>
-                </div>
-              @endif
             </div>
+            @if ($isOwnMessage)
+              <div class="chat-message__actions">
+                <a href="#" class="chat-message__action" onclick="editMessage('{{ $message['id'] }}')">編集</a>
+                <a href="#" class="chat-message__action" onclick="deleteMessage('{{ $message['id'] }}')">削除</a>
+              </div>
+            @endif
           </div>
         @endforeach
       </div>
@@ -151,12 +162,12 @@
               </label>
               <input type="file" name="images[]" id="message-images" multiple accept="image/jpeg,image/png"
                 class="chat-form__image-input">
-              <div class="chat-form__image-preview" id="image-preview"></div>
             </div>
             <button type="submit" class="chat-form__submit">
               <img src="{{ asset('images/Input Button.svg') }}" alt="送信" class="chat-form__submit-icon">
             </button>
           </div>
+          <div class="chat-form__image-preview" id="image-preview"></div>
         </form>
       </div>
     </div>
@@ -200,7 +211,31 @@
   @endif
 
   <script>
-    // 文字数カウント（削除：Figmaデザインに表示なし）
+    // メッセージの自動非表示（3秒後にフェードアウト）
+    document.addEventListener('DOMContentLoaded', function() {
+      const successMessages = document.querySelectorAll('.success-message');
+      const errorMessages = document.querySelectorAll('.error-message');
+
+      function hideMessage(message) {
+        message.style.transition = 'opacity 0.5s ease-out';
+        message.style.opacity = '0';
+        setTimeout(function() {
+          message.style.display = 'none';
+        }, 500);
+      }
+
+      successMessages.forEach(function(message) {
+        setTimeout(function() {
+          hideMessage(message);
+        }, 2000);
+      });
+
+      errorMessages.forEach(function(message) {
+        setTimeout(function() {
+          hideMessage(message);
+        }, 2000);
+      });
+    });
 
     // FN009: 入力情報保持機能
     const transactionId = '{{ $transaction['id'] }}';
