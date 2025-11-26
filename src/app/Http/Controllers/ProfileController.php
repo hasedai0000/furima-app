@@ -63,14 +63,22 @@ class ProfileController extends Controller
             // 取引が完了した商品を表示
             $items = $this->itemService->getMyCompletedBuyItems($searchTerm);
         } elseif ($currentTab === 'transaction') {
-            // 取引中の商品を取得（取引IDが紐づいていて、取引が完了していない）
+            // 取引中の商品を取得（評価が未完了の商品）
             $userTransactions = $this->transactionService->getUserTransactions();
             $transactions = [];
             $totalUnreadCount = 0;
 
-            // 完了していない取引のみをフィルタリング
+            // 評価が未完了の取引のみをフィルタリング
             foreach ($userTransactions as $tx) {
-                if ($tx->getStatus() !== 'completed') {
+                // 評価が完了しているかチェック（購入者と出品者の両方が評価済み）
+                $isRatingCompleted = $this->ratingService->isRatingCompleted(
+                    $tx->getId(),
+                    $tx->getBuyerId(),
+                    $tx->getSellerId()
+                );
+
+                // 評価が未完了の場合のみ表示
+                if (!$isRatingCompleted) {
                     // 商品情報を取得
                     $txItem = $this->itemService->getItem($tx->getItemId());
 
@@ -118,7 +126,13 @@ class ProfileController extends Controller
             // 取引中の商品タブがアクティブでない場合でも、未読数を計算
             $userTransactions = $this->transactionService->getUserTransactions();
             foreach ($userTransactions as $tx) {
-                if ($tx->getStatus() !== 'completed') {
+                // 評価が未完了の取引のみをカウント
+                $isRatingCompleted = $this->ratingService->isRatingCompleted(
+                    $tx->getId(),
+                    $tx->getBuyerId(),
+                    $tx->getSellerId()
+                );
+                if (!$isRatingCompleted) {
                     $transactionUnreadCount += $this->getUnreadMessageCount($tx->getId(), auth()->id());
                 }
             }

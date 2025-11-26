@@ -103,4 +103,31 @@ class RatingService
     }
     return false;
   }
+
+  /**
+   * 取引の評価が完了しているかチェック（購入者と出品者の両方が評価済み）
+   *
+   * @param string $transactionId
+   * @param string $buyerId
+   * @param string $sellerId
+   * @return bool
+   */
+  public function isRatingCompleted(string $transactionId, string $buyerId, string $sellerId): bool
+  {
+    $ratings = $this->ratingRepository->findByTransactionId($transactionId);
+
+    $buyerRated = false;
+    $sellerRated = false;
+
+    foreach ($ratings as $rating) {
+      if ($rating->getRaterId() === $buyerId) {
+        $buyerRated = true;
+      }
+      if ($rating->getRaterId() === $sellerId) {
+        $sellerRated = true;
+      }
+    }
+
+    return $buyerRated && $sellerRated;
+  }
 }
