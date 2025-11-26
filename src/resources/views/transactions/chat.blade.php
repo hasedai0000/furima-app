@@ -143,7 +143,7 @@
           <div class="chat-form__input-row">
             <div class="chat-form__input-area">
               <textarea name="content" id="message-content" class="chat-form__textarea" placeholder="取引メッセージを記入してください"
-                maxlength="400"></textarea>
+                maxlength="400">{{ old('content') }}</textarea>
             </div>
             <div class="chat-form__image-area">
               <label for="message-images" class="chat-form__image-label">
@@ -201,6 +201,49 @@
 
   <script>
     // 文字数カウント（削除：Figmaデザインに表示なし）
+
+    // FN009: 入力情報保持機能
+    const transactionId = '{{ $transaction['id'] }}';
+    const storageKey = 'chat_content_' + transactionId;
+    const messageContent = document.getElementById('message-content');
+
+    // ページ読み込み時に保存された内容を復元
+    // ただし、サーバー側からold('content')で値が返されている場合はそれを優先
+    document.addEventListener('DOMContentLoaded', function() {
+      const serverContent = messageContent ? messageContent.value : '';
+      if (!serverContent || serverContent.trim() === '') {
+        // サーバー側の値が空の場合（送信成功時または初回アクセス時）
+        // 送信成功時はlocalStorageをクリア済み（フォーム送信時にクリア）
+        // 他の画面から戻ってきた場合はlocalStorageから復元
+        const savedContent = localStorage.getItem(storageKey);
+        if (savedContent && messageContent) {
+          messageContent.value = savedContent;
+        }
+      } else {
+        // バリデーションエラーの場合：サーバー側の値をlocalStorageにも保存（次回の遷移時に使用）
+        if (messageContent) {
+          localStorage.setItem(storageKey, serverContent);
+        }
+      }
+    });
+
+    // テキストエリアの内容が変更されたときにlocalStorageに保存
+    if (messageContent) {
+      messageContent.addEventListener('input', function() {
+        localStorage.setItem(storageKey, this.value);
+      });
+    }
+
+    // メッセージ送信時にlocalStorageをクリア
+    // バリデーションエラーの場合はold('content')で値が返されるため、再度保存される
+    const messageForm = document.getElementById('message-form');
+    if (messageForm) {
+      messageForm.addEventListener('submit', function(e) {
+        // フォーム送信時にlocalStorageをクリア
+        // 送信成功時はクリアされたまま、バリデーションエラー時はold('content')で値が返され、再度保存される
+        localStorage.removeItem(storageKey);
+      });
+    }
 
     // 画像プレビュー
     document.getElementById('message-images').addEventListener('change', function(e) {
