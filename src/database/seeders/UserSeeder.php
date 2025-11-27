@@ -122,6 +122,28 @@ class UserSeeder extends Seeder
                 'password' => 'password',
                 'email_verified_at' => now(),
             ],
+            // ダミーデータ用ユーザー
+            [
+                'id' => Str::uuid(),
+                'name' => '商品出品ユーザー1',
+                'email' => 'seller1@dummy.com',
+                'password' => 'password',
+                'email_verified_at' => now(),
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => '商品出品ユーザー2',
+                'email' => 'seller2@dummy.com',
+                'password' => 'password',
+                'email_verified_at' => now(),
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => '一般ユーザー',
+                'email' => 'user@dummy.com',
+                'password' => 'password',
+                'email_verified_at' => now(),
+            ],
         ];
 
         foreach ($users as $userData) {
