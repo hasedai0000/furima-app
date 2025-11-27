@@ -19,21 +19,6 @@
     @endif
     <div class="profile-form__heading">
       <h2 class="auth-form__heading-title">プロフィール設定</h2>
-      @if (isset($averageRating) && $averageRating !== null)
-        <div class="profile-rating">
-          <span class="profile-rating__label">評価平均:</span>
-          <span class="profile-rating__value">
-            @for ($i = 1; $i <= 5; $i++)
-              @if ($i <= $averageRating)
-                <i class="fas fa-star profile-rating__star--filled"></i>
-              @else
-                <i class="far fa-star profile-rating__star"></i>
-              @endif
-            @endfor
-            <span class="profile-rating__number">{{ $averageRating }}</span>
-          </span>
-        </div>
-      @endif
     </div>
     <form class="form" action="{{ $profile ? route('mypage.profile.update') : route('mypage.profile.store') }}"
       method="post" enctype="multipart/form-data">
