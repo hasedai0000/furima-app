@@ -33,6 +33,17 @@
           <h2 class="profile__username">
             {{ $userName ?? (Auth::user()->name ?? 'ユーザー名') }}
           </h2>
+          @if (isset($averageRating) && $averageRating !== null && $averageRating > 0)
+            <div class="profile__rating">
+              @for ($i = 1; $i <= 5; $i++)
+                @if ($i <= $averageRating)
+                  <i class="fas fa-star profile__rating-star--filled"></i>
+                @else
+                  <i class="far fa-star profile__rating-star"></i>
+                @endif
+              @endfor
+            </div>
+          @endif
         </div>
       </div>
       <div class="profile__actions">

@@ -466,6 +466,23 @@
     margin: 0;
 }
 
+.profile__rating {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.profile__rating-star {
+    color: #d9d9d9;
+    font-size: 18px;
+}
+
+.profile__rating-star--filled {
+    color: #ffd700;
+    font-size: 18px;
+}
+
 .profile__actions {
     display: flex;
     align-items: center;
