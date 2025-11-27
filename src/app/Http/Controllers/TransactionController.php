@@ -7,6 +7,8 @@ use App\Application\Services\ItemService;
 use App\Application\Services\MessageService;
 use App\Application\Services\RatingService;
 use App\Application\Services\TransactionService;
+use App\Http\Requests\Transaction\MessageSendRequest;
+use App\Http\Requests\Transaction\MessageUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
@@ -109,35 +111,20 @@ class TransactionController extends Controller
   /**
    * メッセージを送信
    *
-   * @param Request $request
+   * @param MessageSendRequest $request
    * @param string $transactionId
    * @return RedirectResponse
    */
-  public function sendMessage(Request $request, string $transactionId): RedirectResponse
+  public function sendMessage(MessageSendRequest $request, string $transactionId): RedirectResponse
   {
     try {
-      $validator = Validator::make($request->all(), [
-        'content' => 'nullable|string|max:400',
-        'images.*' => 'nullable|image|mimes:jpeg,png|max:5120', // 5MB以下
-      ], [
-        'content.max' => '本文は400文字以内で入力してください',
-        'images.*.image' => '画像ファイルをアップロードしてください',
-        'images.*.mimes' => '「.png」または「.jpeg」形式でアップロードしてください',
-        'images.*.max' => '画像サイズが大きすぎます',
-      ]);
-
-      if ($validator->fails()) {
-        return redirect()->route('transactions.show', ['transaction_id' => $transactionId])
-          ->withErrors($validator)
-          ->withInput();
-      }
-
-      $validated = $validator->validated();
+      $validated = $request->validated();
       $images = $request->hasFile('images') ? $request->file('images') : null;
+      $content = !empty(trim($validated['content'] ?? '')) ? trim($validated['content']) : null;
 
       $this->messageService->sendMessage(
         $transactionId,
-        $validated['content'] ?? null,
+        $content,
         $images
       );
 
@@ -152,31 +139,20 @@ class TransactionController extends Controller
   /**
    * メッセージを更新
    *
-   * @param Request $request
+   * @param MessageUpdateRequest $request
    * @param string $transactionId
    * @param string $messageId
    * @return RedirectResponse
    */
-  public function updateMessage(Request $request, string $transactionId, string $messageId): RedirectResponse
+  public function updateMessage(MessageUpdateRequest $request, string $transactionId, string $messageId): RedirectResponse
   {
     try {
-      $validator = Validator::make($request->all(), [
-        'content' => 'nullable|string|max:400',
-      ], [
-        'content.max' => '本文は400文字以内で入力してください',
-      ]);
-
-      if ($validator->fails()) {
-        return redirect()->route('transactions.show', ['transaction_id' => $transactionId])
-          ->withErrors($validator)
-          ->withInput();
-      }
-
-      $validated = $validator->validated();
+      $validated = $request->validated();
+      $content = !empty(trim($validated['content'] ?? '')) ? trim($validated['content']) : null;
 
       $this->messageService->updateMessage(
         $messageId,
-        $validated['content'] ?? null
+        $content
       );
 
       return redirect()->route('transactions.show', ['transaction_id' => $transactionId])

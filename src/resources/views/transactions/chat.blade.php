@@ -153,8 +153,7 @@
           </div>
           <div class="chat-form__input-row">
             <div class="chat-form__input-area">
-              <textarea name="content" id="message-content" class="chat-form__textarea" placeholder="取引メッセージを記入してください"
-                maxlength="400">{{ old('content') }}</textarea>
+              <textarea name="content" id="message-content" class="chat-form__textarea" placeholder="取引メッセージを記入してください">{{ old('content') }}</textarea>
             </div>
             <div class="chat-form__image-area">
               <label for="message-images" class="chat-form__image-label">
