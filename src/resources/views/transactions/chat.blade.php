@@ -159,8 +159,7 @@
               <label for="message-images" class="chat-form__image-label">
                 画像を追加
               </label>
-              <input type="file" name="images[]" id="message-images" multiple accept="image/jpeg,image/png"
-                class="chat-form__image-input">
+              <input type="file" name="images[]" id="message-images" class="chat-form__image-input">
             </div>
             <button type="submit" class="chat-form__submit">
               <img src="{{ asset('images/Input Button.svg') }}" alt="送信" class="chat-form__submit-icon">
@@ -211,9 +210,14 @@
 
   <script>
     // メッセージの自動非表示（3秒後にフェードアウト）
+    // バリデーションエラーメッセージ（.chat-form__errors内）は除外
     document.addEventListener('DOMContentLoaded', function() {
       const successMessages = document.querySelectorAll('.success-message');
-      const errorMessages = document.querySelectorAll('.error-message');
+      // すべての.error-messageを取得し、.chat-form__errors内のものは除外
+      const allErrorMessages = document.querySelectorAll('.error-message');
+      const errorMessages = Array.from(allErrorMessages).filter(function(message) {
+        return !message.closest('.chat-form__errors');
+      });
 
       function hideMessage(message) {
         message.style.transition = 'opacity 0.5s ease-out';
