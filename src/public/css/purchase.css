@@ -220,8 +220,8 @@
     }
 }
 
-/* タブレット (768-850px) */
-@media (min-width: 768px) and (max-width: 850px) {
+/* タブレット (767-850px) */
+@media (min-width: 767px) and (max-width: 850px) {
     .purchase__container {
         grid-template-columns: 1fr;
         gap: 40px;

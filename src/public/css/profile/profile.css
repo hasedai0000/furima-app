@@ -236,7 +236,7 @@
 }
 
 /* レスポンシブ対応 */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .profile-image__container {
         flex-direction: column;
         align-items: flex-start;

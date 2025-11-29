@@ -24,7 +24,7 @@ class MessageSendRequest extends FormRequest
     return [
       'content' => 'nullable|string|max:400',
       'images' => 'nullable|array',
-      'images.*' => 'nullable|image|mimes:jpeg,png|max:5120', // 5MB以下
+      'images.*' => 'nullable|image|mimes:jpeg,png',
     ];
   }
 
@@ -61,9 +61,8 @@ class MessageSendRequest extends FormRequest
     return [
       'content.max' => '本文は 400 文字以内で入力してください',
       'images.array' => '画像は配列形式で送信してください',
-      'images.*.image' => '画像ファイルをアップロードしてください',
+      'images.*.image' => '「.png」または「.jpeg」形式でアップロードしてください',
       'images.*.mimes' => '「.png」または「.jpeg」形式でアップロードしてください',
-      'images.*.max' => '画像サイズが大きすぎます',
     ];
   }
 }

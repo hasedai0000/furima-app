@@ -313,7 +313,7 @@
 }
 
 /* レスポンシブ対応 */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .auth-form__content {
         width: 90% !important;
         max-width: 500px !important;
