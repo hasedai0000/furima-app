@@ -160,11 +160,6 @@ a:hover {
 /* レスポンシブ対応 */
 /* PC (1400-1540px) */
 @media (min-width: 1400px) and (max-width: 1540px) {
-    .header__inner {
-        max-width: 1200px;
-        padding: 0 40px;
-    }
-
     .header__logo {
         font-size: 22px;
     }
@@ -174,7 +169,7 @@ a:hover {
     }
 
     .header__search {
-        max-width: 350px;
+        max-width: 500px;
     }
 
     .header__search-input {
